@@ -46,10 +46,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//停止其他model的进程
-	ap.theresnet50Executor.Stop()
-	ap.theresnet152Executor.Stop()
-
 	//get the action Name
 	var req requestBody
 	err = json.Unmarshal(body, &req)
@@ -71,6 +67,10 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			ap.runHandler(w, r)
 			return
 		}
+
+		//停止其他model的进程
+		ap.theresnet50Executor.Stop()
+		ap.theresnet152Executor.Stop()
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
