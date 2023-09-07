@@ -2,12 +2,14 @@ package openwhisk
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
+	"sync"
 	"time"
 )
 
@@ -128,66 +130,73 @@ func (proc *resnet50Executor) IsStarted() bool {
 
 // Interact sends input to the Executor's command and waits for output.
 // It returns the output from the command, or an error if the command exits before producing output.
-func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
-	//创建一个buffer，即使proc.exited，依然能得到所有output
-	//var outputBuffer bytes.Buffer
-	//var wg sync.WaitGroup
+//func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
+//	//创建一个buffer，即使proc.exited，依然能得到所有output
+//
+//	_, err := proc.input.Write(in)
+//	if err != nil {
+//		return nil, fmt.Errorf("failed to write to stdin: %w", err)
+//	}
+//
+//	chout := make(chan []byte)
+//	go func() {
+//		out, err := proc.output.ReadBytes('\n')
+//		if err != nil {
+//			chout <- nil
+//		} else {
+//			chout <- out
+//		}
+//	}()
+//
+//	select {
+//	case out := <-chout:
+//		if out == nil {
+//			return nil, errors.New("no answer from the action")
+//		}
+//		return out, nil
+//	case <-proc.exited:
+//		return nil, errors.New("command exited!!!!!!!!")
+//	}
+//}
 
+func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 	_, err := proc.input.Write(in)
 	if err != nil {
 		return nil, fmt.Errorf("failed to write to stdin: %w", err)
 	}
 
+	_, err = proc.input.Write([]byte("\n"))
+	if err != nil {
+		return nil, fmt.Errorf("failed to write newline to stdin: %w", err)
+	}
+
+	var outputBuffer bytes.Buffer
 	chout := make(chan []byte)
+	var wg sync.WaitGroup
+
+	wg.Add(1)
 	go func() {
-		out, err := proc.output.ReadBytes('\n')
+		defer wg.Done()
+		_, err := io.Copy(&outputBuffer, proc.output)
 		if err != nil {
-			chout <- nil
-		} else {
-			chout <- out
+			// Handle error, maybe log it or send it somewhere else.
 		}
+		chout <- outputBuffer.Bytes()
 	}()
 
-	//select {
-	//case out := <-chout:
-	//	if out == nil {
-	//		return nil, errors.New("no answer from the action")
-	//	}
-	//	return out, nil
-	//case <-proc.exited:
-	//	return nil, errors.New("command exited!!!!!!!!")
-	//}
-	var finalOut []byte
-	for {
-		select {
-		case out := <-chout:
-			if out == nil {
-				if len(finalOut) == 0 {
-					return nil, errors.New("no answer from the action")
-				}
-				return finalOut, nil
-			}
-			finalOut = append(finalOut, out...)
-		case <-proc.exited:
-			for {
-				select {
-				case out := <-chout:
-					if out != nil {
-						finalOut = append(finalOut, out...)
-					} else {
-						if len(finalOut) == 0 {
-							return nil, errors.New("no answer from the action")
-						}
-						return finalOut, nil
-					}
-				default:
-					if len(finalOut) == 0 {
-						return nil, errors.New("command exited!!!!!!!!")
-					}
-					return finalOut, nil
-				}
-			}
+	select {
+	case out := <-chout:
+		if len(out) == 0 {
+			return nil, errors.New("no answer from the action")
 		}
+		return out, nil
+	case <-proc.exited:
+		wg.Wait()
+		out := <-chout
+		if len(out) == 0 {
+			return nil, errors.New("command exited!!!!!!!!")
+		}
+		return out, nil
 	}
 }
 
