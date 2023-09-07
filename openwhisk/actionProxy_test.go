@@ -25,6 +25,7 @@ import (
 	"log"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -80,7 +81,7 @@ func TestStartLatestAction_emit2(t *testing.T) {
 	ap.ExtractAction(&buf, "bin")
 	ap.StartLatestAction()
 	body := map[string]interface{}{
-		"action_name":    "/guest/helloPython",
+		"action_name":    "/guest/ptest05",
 		"action_version": "0.0.1",
 		"activation_id":  "31eaceb63dda44e1aaceb63ddae4e1a2",
 		"deadline":       "1693902427193",
@@ -109,21 +110,26 @@ func TestStartLatestAction_emit2(t *testing.T) {
 	fmt.Println(string(actionName))
 
 	// load model
-	err1 := ap.theresnet18Executor.Start(false)
+	err1 := ap.theresnet50Executor.Start(false)
+
+	fmt.Println(string("Noerr:"))
+	//fmt.Println(err1.Error())
 	// check for early termination
 	if err1 != nil {
 		Debug("WARNING! Command exited")
-		ap.theresnet18Executor = nil
-		return
+		fmt.Println(string("err:"))
+		//ap.theresnet50Executor = nil
+		//return
 	}
-
-	res, _ := ap.theresnet18Executor.Interact([]byte(bodyBytes))
+	time.Sleep(5 * time.Second)
+	res, _ := ap.theresnet50Executor.Interact1([]byte(bodyBytes))
+	fmt.Println(string("res:"))
 	fmt.Println(string(res))
 
 	//assert.Equal(t, res, []byte("2\n"))
 	/**/
-	ap.theresnet18Executor.Stop()
-	dump(logf)
+	ap.theresnet50Executor.Stop()
+	//dump(logf)
 }
 
 func Example_compile_bin() {

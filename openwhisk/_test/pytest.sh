@@ -1,3 +1,3 @@
 #!/bin/bash
-
-python3 function.py
+cd _test
+/Users/suiyifan/Downloads/Analyzer/bin/python3.8 function.py

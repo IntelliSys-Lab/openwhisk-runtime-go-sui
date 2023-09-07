@@ -18,11 +18,13 @@ import (
 // Executor is the container and the guardian  of a child process
 // It starts a command, feeds input and output, read logs and control its termination
 type resnet50Executor struct {
-	cmd     *exec.Cmd
-	input   io.WriteCloser
-	output  *bufio.Reader
-	exited  chan bool
-	started bool
+	cmd         *exec.Cmd
+	input       io.WriteCloser
+	output      *bufio.Reader
+	exited      chan bool
+	started     bool
+	stdout      *bytes.Buffer
+	stdoutMutex sync.Mutex
 }
 
 // NewExecutor creates a child subprocess using the provided command line,
@@ -33,6 +35,7 @@ func Newresnet50Executor(logout *os.File, logerr *os.File, command string, env m
 	//env:子进程的环境变量; cmd + arg: 真正的命令
 	cmd := exec.Command(command, args...) //创建一个可以用来启动命令的 *Cmd
 	cmd.Stdout = logout
+	//cmd.Stdout = cmd.StdoutPipe()
 	cmd.Stderr = logerr
 	cmd.Env = []string{} //初始化 *Cmd 的 Env 字段，这个字段用来设置子进程的环境变量
 	for k, v := range env {
@@ -62,6 +65,8 @@ func Newresnet50Executor(logout *os.File, logerr *os.File, command string, env m
 		output,
 		make(chan bool),
 		false,
+		new(bytes.Buffer),
+		sync.Mutex{},
 	}
 }
 
@@ -70,6 +75,11 @@ func Newresnet50Executor(logout *os.File, logerr *os.File, command string, env m
 // If waitForAck is false, it waits for a short time to check if the command has exited.
 func (proc *resnet50Executor) Start(waitForAck bool) error {
 	Debug("Start:")
+	proc.stdoutMutex.Lock()
+	proc.stdout = new(bytes.Buffer)
+	proc.stdoutMutex.Unlock()
+	proc.cmd.Stdout = io.MultiWriter(os.Stdout, proc.stdout)
+
 	err := proc.cmd.Start()
 	if err != nil {
 		proc.cmd = nil // No need to keep the command around if it failed to start
@@ -87,7 +97,7 @@ func (proc *resnet50Executor) Start(waitForAck bool) error {
 		select {
 		case <-proc.exited:
 			return fmt.Errorf("command exited!!")
-		case <-time.After(3 * time.Second):
+		case <-time.After(100 * time.Millisecond):
 			return nil
 		}
 	}
@@ -193,11 +203,12 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		return out, nil
 	case <-proc.exited:
 		//wg.Wait()
-		out := <-chout
-		if len(out) == 0 {
-			return nil, errors.New("command exited!!!!!!!!")
-		}
-		return out, nil
+		//out := <-chout
+		//if len(out) == 0 {
+		//	return nil, errors.New("command exited!!!!!!!!")
+		//}
+		//return out, nil
+		return nil, errors.New("command exited!!!!!!!!")
 	}
 }
 
@@ -208,5 +219,44 @@ func (proc *resnet50Executor) Stop() {
 	if proc.cmd != nil {
 		proc.cmd.Process.Kill()
 		proc.cmd = nil
+	}
+}
+
+func (proc *resnet50Executor) Interact1(in []byte) ([]byte, error) {
+	_, err := proc.input.Write(in)
+	if err != nil {
+		return nil, fmt.Errorf("failed to write to stdin: %w", err)
+	}
+
+	_, err = proc.input.Write([]byte("\n"))
+	if err != nil {
+		return nil, fmt.Errorf("failed to write newline to stdin: %w", err)
+	}
+
+	var outputBuffer bytes.Buffer
+	chout := make(chan []byte)
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		proc.stdoutMutex.Lock()
+		_, err := io.Copy(&outputBuffer, proc.stdout)
+		proc.stdoutMutex.Unlock()
+		if err != nil {
+			// Handle error, maybe log it or send it somewhere else.
+			fmt.Errorf("meet error when copy output: %w", err)
+		}
+		chout <- outputBuffer.Bytes()
+	}()
+
+	select {
+	case out := <-chout:
+		if len(out) == 0 {
+			return nil, errors.New("no answer from the action")
+		}
+		return out, nil
+	case <-proc.exited:
+		return nil, errors.New("command exited!!!!!!!!")
 	}
 }
