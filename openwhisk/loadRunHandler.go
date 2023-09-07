@@ -200,6 +200,11 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// execute the action
 		response, err := ap.theresnet152Executor.Interact(body)
 
+		sendError(w, http.StatusBadGateway, "Response is: ")
+		sendError(w, http.StatusBadGateway, string(response))
+		sendError(w, http.StatusBadGateway, "ERROR is: ")
+		sendError(w, http.StatusBadGateway, err.Error())
+
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited")
