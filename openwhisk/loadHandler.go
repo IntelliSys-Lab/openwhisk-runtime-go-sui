@@ -63,7 +63,8 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			Debug("WARNING! Command exited")
 			ap.theresnet18Executor = nil
-			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
 			return
 		}
 	} else if strings.Contains(actionName, "ptest05") {

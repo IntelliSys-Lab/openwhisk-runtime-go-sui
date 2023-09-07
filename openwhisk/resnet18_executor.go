@@ -85,7 +85,7 @@ func (proc *resnet18Executor) Start(waitForAck bool) error {
 		select {
 		case <-proc.exited:
 			return fmt.Errorf("command exited!!")
-		case <-time.After(3 * time.Second):
+		case <-time.After(1 * time.Second):
 			return nil
 		}
 	}
