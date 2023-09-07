@@ -192,7 +192,7 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		}
 		return out, nil
 	case <-proc.exited:
-		wg.Wait()
+		//wg.Wait()
 		out := <-chout
 		if len(out) == 0 {
 			return nil, errors.New("command exited!!!!!!!!")
