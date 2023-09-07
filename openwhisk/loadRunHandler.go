@@ -148,8 +148,11 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		DebugLimit("received:", response, 120)
 
 		// check if the answer is an object map
-		var objmap map[string]*json.RawMessage
-		err = json.Unmarshal(response, &objmap)
+		var jsonObj map[string]interface{}
+		err = json.Unmarshal(response, &jsonObj)
+		//
+		//var objmap map[string]*json.RawMessage
+		//err = json.Unmarshal(response, &objmap)
 		if err != nil {
 			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
 			return

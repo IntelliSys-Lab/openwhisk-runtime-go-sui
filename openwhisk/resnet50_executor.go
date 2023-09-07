@@ -180,6 +180,7 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		_, err := io.Copy(&outputBuffer, proc.output)
 		if err != nil {
 			// Handle error, maybe log it or send it somewhere else.
+			fmt.Errorf("meet error when copy output: %w", err)
 		}
 		chout <- outputBuffer.Bytes()
 	}()
