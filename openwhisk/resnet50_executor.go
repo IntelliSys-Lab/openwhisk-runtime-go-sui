@@ -129,14 +129,13 @@ func (proc *resnet50Executor) IsStarted() bool {
 // Interact sends input to the Executor's command and waits for output.
 // It returns the output from the command, or an error if the command exits before producing output.
 func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
+	//创建一个buffer，即使proc.exited，依然能得到所有output
+	//var outputBuffer bytes.Buffer
+	//var wg sync.WaitGroup
+
 	_, err := proc.input.Write(in)
 	if err != nil {
 		return nil, fmt.Errorf("failed to write to stdin: %w", err)
-	}
-
-	_, err = proc.input.Write([]byte("\n"))
-	if err != nil {
-		return nil, fmt.Errorf("failed to write newline to stdin: %w", err)
 	}
 
 	chout := make(chan []byte)
@@ -149,14 +148,46 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		}
 	}()
 
-	select {
-	case out := <-chout:
-		if out == nil {
-			return nil, errors.New("no answer from the action")
+	//select {
+	//case out := <-chout:
+	//	if out == nil {
+	//		return nil, errors.New("no answer from the action")
+	//	}
+	//	return out, nil
+	//case <-proc.exited:
+	//	return nil, errors.New("command exited!!!!!!!!")
+	//}
+	var finalOut []byte
+	for {
+		select {
+		case out := <-chout:
+			if out == nil {
+				if len(finalOut) == 0 {
+					return nil, errors.New("no answer from the action")
+				}
+				return finalOut, nil
+			}
+			finalOut = append(finalOut, out...)
+		case <-proc.exited:
+			for {
+				select {
+				case out := <-chout:
+					if out != nil {
+						finalOut = append(finalOut, out...)
+					} else {
+						if len(finalOut) == 0 {
+							return nil, errors.New("no answer from the action")
+						}
+						return finalOut, nil
+					}
+				default:
+					if len(finalOut) == 0 {
+						return nil, errors.New("command exited!!!!!!!!")
+					}
+					return finalOut, nil
+				}
+			}
 		}
-		return out, nil
-	case <-proc.exited:
-		return nil, errors.New("command exited!!!!!!!!")
 	}
 }
 
