@@ -222,6 +222,9 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		sendError(w, http.StatusBadGateway, "OBJMAP is: ")
+		sendError(w, http.StatusBadGateway, string(response))
+
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(response)))
 		numBytesWritten, err := w.Write(response)
