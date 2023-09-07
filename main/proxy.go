@@ -29,7 +29,8 @@ import (
 var version = flag.Bool("version", false, "show version")
 
 // flag to enable debug
-var debug = flag.Bool("debug", false, "enable debug output")
+//这里我们把debug改成true了。真正到openwhisk的时候：改回false
+var debug = flag.Bool("debug", true, "enable debug output")
 
 // flag to require on-the-fly compilation
 var compile = flag.String("compile", "", "compile, reading in standard input the specified function, and producing the result in stdout")
