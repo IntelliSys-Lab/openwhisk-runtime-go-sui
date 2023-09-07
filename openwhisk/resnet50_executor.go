@@ -169,7 +169,7 @@ func (proc *resnet50Executor) IsStarted() bool {
 //	}
 //}
 
-func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
+func (proc *resnet50Executor) Interact1(in []byte) ([]byte, error) {
 	_, err := proc.input.Write(in)
 	if err != nil {
 		return nil, fmt.Errorf("failed to write to stdin: %w", err)
@@ -222,7 +222,7 @@ func (proc *resnet50Executor) Stop() {
 	}
 }
 
-func (proc *resnet50Executor) Interact1(in []byte) ([]byte, error) {
+func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 	_, err := proc.input.Write(in)
 	if err != nil {
 		return nil, fmt.Errorf("failed to write to stdin: %w", err)
