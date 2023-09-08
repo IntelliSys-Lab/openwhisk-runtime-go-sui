@@ -31,6 +31,10 @@ type requestBody struct {
 	// Include any other fields you need
 }
 
+type Data struct {
+	Content string `json:"content"`
+}
+
 func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 	//if path == "run"，也执行loadHandler
@@ -148,11 +152,10 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		DebugLimit("received:", response, 120)
 
 		// check if the answer is an object map
-		var jsonObj map[string]interface{}
-		err = json.Unmarshal(response, &jsonObj)
-		//
-		//var objmap map[string]*json.RawMessage
-		//err = json.Unmarshal(response, &objmap)
+		var objmap map[string]*json.RawMessage
+		resStr := strings.ReplaceAll(string(response), "'", "\"")
+		response = []byte(resStr)
+		err = json.Unmarshal(response, &objmap)
 		if err != nil {
 			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
 			return

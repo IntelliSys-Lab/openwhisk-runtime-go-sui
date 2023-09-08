@@ -24,6 +24,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -121,13 +122,38 @@ func TestStartLatestAction_emit2(t *testing.T) {
 		//ap.theresnet50Executor = nil
 		//return
 	}
-	time.Sleep(5 * time.Second)
-	res, _ := ap.theresnet50Executor.Interact1([]byte(bodyBytes))
+	time.Sleep(10 * time.Second)
+	res, _ := ap.theresnet50Executor.Interact([]byte(bodyBytes))
+
 	fmt.Println(string("res:"))
 	fmt.Println(string(res))
 
-	//assert.Equal(t, res, []byte("2\n"))
-	/**/
+	//New added
+	//output := strings.ReplaceAll(string(res), "'", "\"")
+	//var data map[string]interface{}
+	//err = json.Unmarshal([]byte(output), &data)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+	//jsonOutput, err := json.Marshal(data)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+	//fmt.Print(string(jsonOutput))
+
+	var objmap map[string]*json.RawMessage
+	fmt.Println("JSON:")
+	resStr := strings.ReplaceAll(string(res), "'", "\"")
+	err = json.Unmarshal([]byte(resStr), &objmap)
+	if err != nil {
+		fmt.Println(err)
+	}
+	res = []byte(resStr)
+	fmt.Println([]byte(resStr))
+	fmt.Println(string(res))
+
 	ap.theresnet50Executor.Stop()
 	//dump(logf)
 }

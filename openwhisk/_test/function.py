@@ -2,6 +2,7 @@ import datetime, json, os, uuid, sys
 import time
 import warnings
 warnings.filterwarnings("ignore")
+lib_start = datetime.datetime.now()
 
 
 def print_time():
@@ -10,15 +11,13 @@ def print_time():
 
 
 def main():
-    print_time()  # print time at the start
-    print(sys.executable)
+    #lib_start = datetime.datetime.now()
     from PIL import Image
     import torch
     from torchvision import transforms
     from torchvision.models import resnet18
     import boto3
-
-    print_time()  # print time at the start
+    lib_end = datetime.datetime.now()
 
     SCRIPT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
     class_idx = json.load(open(os.path.join(SCRIPT_DIR, "imagenet_class_index.json"), 'r'))
@@ -31,7 +30,7 @@ def main():
     input_bucket = 'test-data-sui'
     key = 'beach.jpg'
     model_key1 = 'resnet18.pth'
-    print(SCRIPT_DIR)
+    #print(SCRIPT_DIR)
 
     access_key_id = 'AKIAV3GBJPI4VX4UGGK6'
     secret_access_key = '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'
@@ -47,13 +46,13 @@ def main():
     if not model:
 
         # First Download of Model
-        print("start download")
+        #print("start download")
 
         #model_path = '/Users/suiyifan/Downloads/serverless-benchmarks-master-2/analyzer/sharedmemory/resnet152.pth'
         model_path = 'resnet18.pth'
 
 
-        print(model_path)
+        #print(model_path)
 
         model_process_begin = datetime.datetime.now()
         model = resnet18(pretrained=False)
@@ -63,18 +62,17 @@ def main():
 
     else:
 
-        print("has been downloaded")
+        #print("has been downloaded")
 
         model_process_begin = datetime.datetime.now()
         model_process_end = datetime.datetime.now()
         model_download_begin = datetime.datetime.now()
         model_download_end = model_download_begin
 
-    print_time()  # print time at the start
+    #print_time()  # print time at the start
+    model_end = datetime.datetime.now()
 
     line = sys.stdin.readline()  # block until some input is received
-    print_time()
-
 
     process_begin = datetime.datetime.now()
     input_image = Image.open(image_path)
@@ -99,19 +97,22 @@ def main():
 
 
     #model_download_time = (model_download_end - model_download_begin) / datetime.timedelta(microseconds=1)
-    model_process_time = (model_process_end - model_process_begin) / datetime.timedelta(microseconds=1)
-    process_time = (process_end - process_begin) / datetime.timedelta(microseconds=1)
+    lib_load_time = (lib_end - lib_start) / datetime.timedelta(milliseconds=1)
+    model_load_time = (model_end - lib_end) / datetime.timedelta(milliseconds=1)
+    wait_time = (process_begin - model_end) / datetime.timedelta(milliseconds=1)
+    model_process_time = (model_process_end - model_process_begin) / datetime.timedelta(milliseconds=1)
+    process_time = (process_end - process_begin) / datetime.timedelta(milliseconds=1)
 
-    print_time()
+    #print_time()
+
 
     return {
         'result': {'idx': index.item(), 'class': ret},
         'measurement': {
-            'image_download_time': 0,
-            'model_download_time':0,
-            'model_process_time': model_process_time,
-            'compute_time': process_time,
-            'path':image_path
+            'lib_load_time': lib_load_time,
+            'model_load_time':model_load_time,
+            'wait_time': wait_time,
+            'compute_time(image pre-process + inference)': process_time
         }
     }
 
