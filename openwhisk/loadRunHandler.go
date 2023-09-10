@@ -67,13 +67,13 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
 			return
 		}
-		if ap.theresnet18Executor.started == false { //没有预加载，所以直接进入cold start
+		if ap.theresnet18Executor.started == false {
 			ap.runHandler(w, r)
 			return
 		}
 
 		//停止其他model的进程
-		//ap.theresnet50Executor.Stop()
+		//ap.theresnet18Executor.Stop()
 		//ap.theresnet152Executor.Stop()
 
 		// remove newlines
@@ -86,13 +86,16 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			Debug("WARNING! Command exited")
 			ap.theresnet18Executor = nil
-			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet18 command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
 			return
 		}
 		DebugLimit("received:", response, 120)
 
 		// check if the answer is an object map
 		var objmap map[string]*json.RawMessage
+		resStr := strings.ReplaceAll(string(response), "'", "\"")
+		response = []byte(resStr)
 		err = json.Unmarshal(response, &objmap)
 		if err != nil {
 			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
@@ -195,7 +198,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 		//停止其他model的进程
 		//ap.theresnet18Executor.Stop()
-		//ap.theresnet50Executor.Stop()
+		//ap.theresnet152Executor.Stop()
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -203,30 +206,25 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// execute the action
 		response, err := ap.theresnet152Executor.Interact(body)
 
-		sendError(w, http.StatusBadGateway, "Response is: ")
-		sendError(w, http.StatusBadGateway, string(response))
-		sendError(w, http.StatusBadGateway, "ERROR is: ")
-		sendError(w, http.StatusBadGateway, err.Error())
-
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited")
 			ap.theresnet152Executor = nil
-			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet18 command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
 			return
 		}
 		DebugLimit("received:", response, 120)
 
 		// check if the answer is an object map
 		var objmap map[string]*json.RawMessage
+		resStr := strings.ReplaceAll(string(response), "'", "\"")
+		response = []byte(resStr)
 		err = json.Unmarshal(response, &objmap)
 		if err != nil {
 			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
 			return
 		}
-
-		sendError(w, http.StatusBadGateway, "OBJMAP is: ")
-		sendError(w, http.StatusBadGateway, string(response))
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(response)))
