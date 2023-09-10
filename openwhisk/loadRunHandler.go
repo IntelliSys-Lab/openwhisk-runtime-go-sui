@@ -73,8 +73,12 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		//ap.theresnet18Executor.Stop()
-		//ap.theresnet152Executor.Stop()
+		if ap.theresnet50Executor.started == true {
+			ap.theresnet50Executor.Stop()
+		}
+		if ap.theresnet152Executor.started == true {
+			ap.theresnet152Executor.Stop()
+		}
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -135,8 +139,12 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		//ap.theresnet18Executor.Stop()
-		//ap.theresnet152Executor.Stop()
+		if ap.theresnet18Executor.started == true {
+			ap.theresnet18Executor.Stop()
+		}
+		if ap.theresnet152Executor.started == true {
+			ap.theresnet152Executor.Stop()
+		}
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -197,8 +205,12 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		//ap.theresnet18Executor.Stop()
-		//ap.theresnet152Executor.Stop()
+		if ap.theresnet18Executor.started == true {
+			ap.theresnet18Executor.Stop()
+		}
+		if ap.theresnet50Executor.started == true {
+			ap.theresnet50Executor.Stop()
+		}
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
