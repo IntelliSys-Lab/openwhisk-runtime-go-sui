@@ -90,7 +90,6 @@ func (proc *Executor) Interact(in []byte) ([]byte, error) {
 	proc.input.Write([]byte("\n")) //向子进程的输入流中写入一个换行符，表示输入结束
 
 	chout := make(chan []byte) //创建一个用于接收子进程输出的通道
-	time.Sleep(3 * time.Second)
 
 	go func() {
 		out, err := proc.output.ReadBytes('\n') //启动一个并发的 goroutine，它尝试从子进程的输出流中读取数据，直到遇到换行符
