@@ -120,6 +120,9 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
+		NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		ap.theresnet18Executor = NEWresnet18Executor1
+
 		// diagnostic when you have writing problems
 		if err != nil {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
@@ -185,6 +188,9 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		if f, ok := w.(http.Flusher); ok {
 			f.Flush()
 		}
+
+		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		ap.theresnet50Executor = NEWresnet50Executor1
 
 		// diagnostic when you have writing problems
 		if err != nil {
