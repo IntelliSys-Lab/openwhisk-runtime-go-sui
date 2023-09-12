@@ -82,7 +82,7 @@ func TestStartLatestAction_emit2(t *testing.T) {
 	ap.ExtractAction(&buf, "bin")
 	ap.StartLatestAction()
 	body := map[string]interface{}{
-		"action_name":    "/guest/ptest05",
+		"action_name":    "/guest/test05",
 		"action_version": "0.0.1",
 		"activation_id":  "31eaceb63dda44e1aaceb63ddae4e1a2",
 		"deadline":       "1693902427193",

@@ -150,12 +150,57 @@ func (ap *ActionProxy) StartLatestAction() error {
 	}
 
 	//为每个model的function都创建一个executor：
+	//NEWresnet18Executor := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+	//NEWresnet50Executor := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+	//NEWresnet152Executor := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+	//ap.theresnet18Executor = NEWresnet18Executor
+	//ap.theresnet50Executor = NEWresnet50Executor
+	//ap.theresnet152Executor = NEWresnet152Executor
+
+	// Save the current executors
+	curResnet18Executor := ap.theresnet18Executor
+	curResnet50Executor := ap.theresnet50Executor
+	curResnet152Executor := ap.theresnet152Executor
+
+	// Try to launch the new executors
 	NEWresnet18Executor := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
 	NEWresnet50Executor := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 	NEWresnet152Executor := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-	ap.theresnet18Executor = NEWresnet18Executor
-	ap.theresnet50Executor = NEWresnet50Executor
-	ap.theresnet152Executor = NEWresnet152Executor
+
+	// Start the new executors
+	err18 := NEWresnet18Executor.Start(os.Getenv("OW_WAIT_FOR_ACK") != "")
+	err50 := NEWresnet50Executor.Start(os.Getenv("OW_WAIT_FOR_ACK") != "")
+	err152 := NEWresnet152Executor.Start(os.Getenv("OW_WAIT_FOR_ACK") != "")
+
+	if err18 == nil {
+		ap.theresnet18Executor = NEWresnet18Executor
+		if curResnet18Executor != nil {
+			Debug("stopping old resnet18 executor")
+			curResnet18Executor.Stop()
+		}
+	} else {
+		// Handle the error
+	}
+
+	if err50 == nil {
+		ap.theresnet50Executor = NEWresnet50Executor
+		if curResnet50Executor != nil {
+			Debug("stopping old resnet50 executor")
+			curResnet50Executor.Stop()
+		}
+	} else {
+		// Handle the error
+	}
+
+	if err152 == nil {
+		ap.theresnet152Executor = NEWresnet152Executor
+		if curResnet152Executor != nil {
+			Debug("stopping old resnet152 executor")
+			curResnet152Executor.Stop()
+		}
+	} else {
+		// Handle the error
+	}
 
 	// save the current executor  将ActionProxy结构体中的成员theExecutor的值赋给curExecutor
 	curExecutor := ap.theExecutor
