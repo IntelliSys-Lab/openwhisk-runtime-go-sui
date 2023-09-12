@@ -191,6 +191,7 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 // and close the channels
 func (proc *resnet50Executor) Stop() {
 	Debug("stopping")
+	proc.started = false
 	if proc.cmd != nil {
 		proc.cmd.Process.Kill()
 		proc.cmd = nil

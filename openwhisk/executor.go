@@ -19,14 +19,12 @@ package openwhisk
 
 import (
 	"bufio"
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
-	"syscall"
 	"time"
 )
 
@@ -201,143 +199,5 @@ func (proc *Executor) Stop() {
 	if proc.cmd != nil {
 		proc.cmd.Process.Kill()
 		proc.cmd = nil
-	}
-}
-
-func (proc *Executor) Interact1(input string) (string, error) {
-	if proc.cmd == nil {
-		return "", fmt.Errorf("No command to interact with")
-	}
-	if proc.cmd.Process == nil {
-		return "", fmt.Errorf("Command not started")
-	}
-	// Check if the process is running
-	err := proc.cmd.Process.Signal(syscall.Signal(0))
-	if err != nil {
-		return "", fmt.Errorf("Command not running: %v", err)
-	}
-
-	stdin, err := proc.cmd.StdinPipe()
-	if err != nil {
-		return "", err
-	}
-
-	time.Sleep(3 * time.Second) // sleep a while to let Python print the first timestamp
-
-	// Send some input to Python
-	_, err = stdin.Write([]byte(input + "\n"))
-	if err != nil {
-		return "", err
-	}
-	stdin.Close()
-
-	// Assuming proc.cmd.Stdout and proc.cmd.Stderr are set to a bytes.Buffer
-	stdout, ok := proc.cmd.Stdout.(*bytes.Buffer)
-	if !ok {
-		return "", fmt.Errorf("Cannot read from stdout")
-	}
-	stderr, ok := proc.cmd.Stderr.(*bytes.Buffer)
-	if !ok {
-		return "", fmt.Errorf("Cannot read from stderr")
-	}
-
-	outString := stdout.String()
-	errString := stderr.String()
-
-	if errString != "" {
-		return outString, errors.New(errString)
-	}
-
-	return outString, nil
-}
-
-// Start starts the Executor's command and waits for it to be ready to accept input.
-// If waitForAck is true, it waits indefinitely for an acknowledgement from the command.
-// If waitForAck is false, it waits for a short time to check if the command has exited.
-func (proc *Executor) Start2(waitForAck bool) error {
-	Debug("Start:")
-	err := proc.cmd.Start()
-	if err != nil {
-		proc.cmd = nil // No need to keep the command around if it failed to start
-		return fmt.Errorf("failed to start command: %w", err)
-	}
-
-	go func() {
-		proc.cmd.Wait()
-		proc.exited <- true
-	}()
-
-	if !waitForAck {
-		select {
-		case <-proc.exited:
-			return fmt.Errorf("command exited!!")
-		case <-time.After(3 * time.Second):
-			return nil
-		}
-	}
-
-	// If we reach here, waitForAck is true, so we wait for an acknowledgement from the command
-	ack := make(chan error)
-	go func() {
-		out, err := proc.output.ReadBytes('\n')
-		if err != nil {
-			ack <- err
-			return
-		}
-
-		var ackData ActionAck
-		err = json.Unmarshal(out, &ackData)
-		if err != nil {
-			ack <- err
-			return
-		}
-
-		if !ackData.Ok {
-			ack <- fmt.Errorf("The action did not initialize properly.")
-			return
-		}
-
-		ack <- nil
-	}()
-
-	select {
-	case err = <-ack:
-		return err
-	case <-proc.exited:
-		return fmt.Errorf("command exited abruptly during initialization")
-	}
-}
-
-// Interact sends input to the Executor's command and waits for output.
-// It returns the output from the command, or an error if the command exits before producing output.
-func (proc *Executor) Interact2(in []byte) ([]byte, error) {
-	_, err := proc.input.Write(in)
-	if err != nil {
-		return nil, fmt.Errorf("failed to write to stdin: %w", err)
-	}
-
-	_, err = proc.input.Write([]byte("\n"))
-	if err != nil {
-		return nil, fmt.Errorf("failed to write newline to stdin: %w", err)
-	}
-
-	chout := make(chan []byte)
-	go func() {
-		out, err := proc.output.ReadBytes('\n')
-		if err != nil {
-			chout <- nil
-		} else {
-			chout <- out
-		}
-	}()
-
-	select {
-	case out := <-chout:
-		if out == nil {
-			return nil, errors.New("no answer from the action")
-		}
-		return out, nil
-	case <-proc.exited:
-		return nil, errors.New("command exited!!!!!!!!")
 	}
 }

@@ -50,7 +50,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.Contains(actionName, "ptest04") {
 		// check if you have an action
 		if ap.theresnet18Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (load)"))
 			return
 		}
 		if ap.theresnet18Executor.started == true {
@@ -70,7 +70,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 	} else if strings.Contains(actionName, "ptest05") {
 		// check if you have an action
 		if ap.theresnet50Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (load)"))
 			return
 		}
 		if ap.theresnet50Executor.started == true {
@@ -89,7 +89,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 	} else if strings.Contains(actionName, "ptest06") {
 		// check if you have an action
 		if ap.theresnet152Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (load)"))
 			return
 		}
 		if ap.theresnet152Executor.started == true {
