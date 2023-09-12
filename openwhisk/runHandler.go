@@ -50,7 +50,6 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 	//当使用body, err := ioutil.ReadAll(r.Body)读取r.Body后，会将r.Body的读取位置移动到数据末尾。如果此时在runHandler()函数中再次尝试读取r.Body，将无法获取到任何数据。
 	//因此，重置r.Body: Reset r.Body so it can be read again
 	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
-
 	defer r.Body.Close()
 	if err != nil {
 		sendError(w, http.StatusBadRequest, fmt.Sprintf("Error reading request body: %v", err))
