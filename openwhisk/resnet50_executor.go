@@ -56,18 +56,6 @@ func Newresnet50Executor(logout *os.File, logerr *os.File, command string, env m
 
 	cmd.Stderr = cmd.Stdout
 
-	//pipeOut, pipeIn, err := os.Pipe()
-	//if err != nil {
-	//	return nil
-	//}
-	//
-	//cmd.Stdout = pipeIn
-	//cmd.Stderr = pipeIn
-	//
-	//cmd.ExtraFiles = []*os.File{pipeIn} //将 pipeIn 添加到 *Cmd 的 ExtraFiles 字段，这样子进程就可以通过文件描述符访问这个管道
-	//output := bufio.NewReader(pipeOut)
-	//创建一个新的 Executor 并返回。这个 Executor 包括 *Cmd，连接到命令标准输入的管道，
-	// 从 pipeOut 读取数据的 *Reader，以及一个 exited 通道，这个通道用来通知命令已经退出。
 	return &resnet50Executor{
 		cmd,
 		input,

@@ -37,7 +37,6 @@ type Data struct {
 
 func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
-	//if path == "run"，也执行loadHandler
 	//在最开始，先得到r.Body.ActionName，然后分析：是否有对应的modelExecutor（通过IsStarted参数）。
 	//if IsStarted == false：证明是冷启动，直接调用runHandler(w,r）
 	//else：证明已经有pre-load的容器了，继续往下执行。
@@ -63,13 +62,15 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	actionName := req.ActionName
+
 	if strings.Contains(actionName, "ptest04") {
 		// actionName contains "ptest"
 		Debug("done reading %d bytes", len(body))
 
 		// check if you have an action
 		if ap.theresnet18Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			ap.runHandler(w, r)
 			return
 		}
 		if ap.theresnet18Executor.started == false {
@@ -93,7 +94,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 		// check for early termination
 		if err != nil {
-			Debug("WARNING! Command exited")
+			Debug("WARNING! RES18 Command exited！！")
 			ap.theresnet18Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet18 command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -139,12 +140,12 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 		// check if you have an action
 		if ap.theresnet50Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			ap.runHandler(w, r)
 			return
 		}
 		if ap.theresnet50Executor.started == false {
 			ap.runHandler(w, r)
-			return
 		}
 
 		//停止其他model的进程
@@ -190,7 +191,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 		ap.theresnet50Executor = NEWresnet50Executor1
 		ap.theresnet50Executor.started = false
 
@@ -209,7 +210,8 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 		// check if you have an action
 		if ap.theresnet152Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			ap.runHandler(w, r)
 			return
 		}
 		if ap.theresnet152Executor.started == false {
@@ -260,7 +262,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 		ap.theresnet152Executor = NEWresnet152Executor1
 		ap.theresnet152Executor.started = false
 

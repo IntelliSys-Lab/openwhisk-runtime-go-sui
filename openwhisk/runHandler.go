@@ -113,18 +113,21 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 	actionName := req.ActionName
 	if strings.Contains(actionName, "ptest04") {
 		NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		sendError(w, http.StatusBadRequest, fmt.Sprintf("has created res18executor"))
 		ap.theresnet18Executor = NEWresnet18Executor1
 		ap.theresnet18Executor.started = false
 	}
 	if strings.Contains(actionName, "ptest05") {
-		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 		ap.theresnet50Executor = NEWresnet50Executor1
 		ap.theresnet50Executor.started = false
+		sendError(w, http.StatusBadRequest, fmt.Sprintf("has created res50executor"))
 	}
 	if strings.Contains(actionName, "ptest06") {
-		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 		ap.theresnet152Executor = NEWresnet152Executor1
 		ap.theresnet152Executor.started = false
+		sendError(w, http.StatusBadRequest, fmt.Sprintf("has created res152executor"))
 	}
 
 	// diagnostic when you have writing problems
