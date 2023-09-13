@@ -235,7 +235,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			//ap.theresnet18Executor = nil
 			//sendError(w, http.StatusBadRequest, fmt.Sprintf("Res50 command exited！！"))
 			//sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
-			//Debug(fmt.Sprintf(err.Error()))
+			//Debug(err.Error())
 		}
 
 		// diagnostic when you have writing problems
