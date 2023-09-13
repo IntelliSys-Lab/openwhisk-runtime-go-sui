@@ -72,7 +72,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
 			NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
 			ap.theresnet18Executor = NEWresnet18Executor1
-			ap.theresnet18Executor.started = false
 			ap.runHandler(w, r)
 			return
 		}
@@ -124,9 +123,10 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-		ap.theresnet18Executor = NEWresnet18Executor1
-		ap.theresnet18Executor.started = false
+		if ap.theresnet18Executor == nil {
+			NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+			ap.theresnet18Executor = NEWresnet18Executor1
+		}
 
 		// diagnostic when you have writing problems
 		if err != nil {
@@ -146,7 +146,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
 			NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 			ap.theresnet50Executor = NEWresnet50Executor1
-			ap.theresnet50Executor.started = false
 			ap.runHandler(w, r)
 			return
 		}
@@ -172,7 +171,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			Debug("WARNING! Command exited")
 			ap.theresnet50Executor = nil
-			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet18 command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet50 command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
 			return
 		}
@@ -197,9 +196,10 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
-		ap.theresnet50Executor = NEWresnet50Executor1
-		ap.theresnet50Executor.started = false
+		if ap.theresnet50Executor == nil {
+			NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+			ap.theresnet50Executor = NEWresnet50Executor1
+		}
 
 		// diagnostic when you have writing problems
 		if err != nil {
@@ -219,7 +219,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
 			NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 			ap.theresnet152Executor = NEWresnet152Executor1
-			ap.theresnet152Executor.started = false
 			ap.runHandler(w, r)
 			return
 		}
@@ -246,7 +245,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			Debug("WARNING! Command exited")
 			ap.theresnet152Executor = nil
-			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet18 command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet152 command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
 			return
 		}
@@ -271,9 +270,11 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-		ap.theresnet152Executor = NEWresnet152Executor1
-		ap.theresnet152Executor.started = false
+		if ap.theresnet152Executor == nil {
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+			ap.theresnet152Executor = NEWresnet152Executor1
+		}
 
 		// diagnostic when you have writing problems
 		if err != nil {

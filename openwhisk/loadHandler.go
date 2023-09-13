@@ -54,6 +54,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet18Executor.started == true {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet18"))
 			return
 		}
 
@@ -62,7 +63,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited")
-			ap.theresnet18Executor = nil
+			//ap.theresnet18Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
 			return
@@ -74,6 +75,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet50Executor.started == true {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
 			return
 		}
 
@@ -82,7 +84,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited")
-			ap.theresnet50Executor = nil
+			//ap.theresnet50Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
 			return
 		}
@@ -93,6 +95,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet152Executor.started == true {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet152"))
 			return
 		}
 
@@ -101,7 +104,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited")
-			ap.theresnet152Executor = nil
+			//ap.theresnet152Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
 			return
 		}
