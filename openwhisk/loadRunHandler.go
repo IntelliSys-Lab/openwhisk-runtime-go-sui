@@ -133,7 +133,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		ap.theresnet18Executor.Stop()
 		NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
 		ap.theresnet18Executor = NEWresnet18Executor1
 
@@ -223,7 +222,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		ap.theresnet50Executor.Stop()
 		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 		ap.theresnet50Executor = NEWresnet50Executor1
 
@@ -320,7 +318,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		ap.theresnet18Executor.Stop()
 		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 		ap.theresnet152Executor = NEWresnet152Executor1
 
