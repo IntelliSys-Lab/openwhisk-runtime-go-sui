@@ -76,7 +76,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 
 	// check for early termination
 	if err != nil {
-		Debug("WARNING! Command exited")
+		Debug("WARNING! Command exited (runHandler)")
 		ap.theExecutor = nil
 		sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
 		return

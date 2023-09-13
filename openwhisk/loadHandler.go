@@ -58,11 +58,14 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		ap.theresnet18Executor = NEWresnet18Executor1
+
 		//Pre-load libraries & model
 		err := ap.theresnet18Executor.Start(false)
 		// check for early termination
 		if err != nil {
-			Debug("WARNING! Command exited")
+			Debug("WARNING! Command exited (loadHandler)")
 			//ap.theresnet18Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -78,6 +81,9 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
 			return
 		}
+
+		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+		ap.theresnet50Executor = NEWresnet50Executor1
 
 		//Pre-load libraries & model
 		err := ap.theresnet50Executor.Start(false)
@@ -98,6 +104,9 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet152"))
 			return
 		}
+
+		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+		ap.theresnet152Executor = NEWresnet152Executor1
 
 		//Pre-load libraries & model
 		err := ap.theresnet152Executor.Start(false)
