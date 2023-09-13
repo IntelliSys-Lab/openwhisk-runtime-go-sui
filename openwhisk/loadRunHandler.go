@@ -80,13 +80,13 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
-		if ap.theresnet50Executor.started == true {
-			ap.theresnet50Executor.Stop()
-		}
-		if ap.theresnet152Executor.started == true {
-			ap.theresnet152Executor.Stop()
-		}
+		////停止其他model的进程
+		//if ap.theresnet50Executor.started == true {
+		//	ap.theresnet50Executor.Stop()
+		//}
+		//if ap.theresnet152Executor.started == true {
+		//	ap.theresnet152Executor.Stop()
+		//}
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -128,6 +128,19 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			ap.theresnet18Executor = NEWresnet18Executor1
 		}
 
+		if ap.theresnet18Executor.started == true {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet18"))
+
+		}
+		err2 := ap.theresnet18Executor.Start(false)
+		if err2 != nil {
+			Debug("WARNING! Command exited")
+			//ap.theresnet18Executor = nil
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("Res18 command exited！！"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+
+		}
+
 		// diagnostic when you have writing problems
 		if err != nil {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
@@ -153,13 +166,13 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			ap.runHandler(w, r)
 		}
 
-		//停止其他model的进程
-		if ap.theresnet18Executor.started == true {
-			ap.theresnet18Executor.Stop()
-		}
-		if ap.theresnet152Executor.started == true {
-			ap.theresnet152Executor.Stop()
-		}
+		////停止其他model的进程
+		//if ap.theresnet18Executor.started == true {
+		//	ap.theresnet18Executor.Stop()
+		//}
+		//if ap.theresnet152Executor.started == true {
+		//	ap.theresnet152Executor.Stop()
+		//}
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -201,6 +214,18 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			ap.theresnet50Executor = NEWresnet50Executor1
 		}
 
+		if ap.theresnet50Executor.started == true {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
+
+		}
+		err2 := ap.theresnet50Executor.Start(false)
+		if err2 != nil {
+			Debug("WARNING! Command exited")
+			//ap.theresnet18Executor = nil
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("Res50 command exited！！"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+		}
+
 		// diagnostic when you have writing problems
 		if err != nil {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
@@ -227,13 +252,13 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
-		if ap.theresnet18Executor.started == true {
-			ap.theresnet18Executor.Stop()
-		}
-		if ap.theresnet50Executor.started == true {
-			ap.theresnet50Executor.Stop()
-		}
+		////停止其他model的进程
+		//if ap.theresnet18Executor.started == true {
+		//	ap.theresnet18Executor.Stop()
+		//}
+		//if ap.theresnet50Executor.started == true {
+		//	ap.theresnet50Executor.Stop()
+		//}
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -274,6 +299,18 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
 			NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 			ap.theresnet152Executor = NEWresnet152Executor1
+		}
+
+		if ap.theresnet152Executor.started == true {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet152"))
+
+		}
+		err2 := ap.theresnet152Executor.Start(false)
+		if err2 != nil {
+			Debug("WARNING! Command exited")
+			//ap.theresnet18Executor = nil
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("Res152 command exited！！"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
 		}
 
 		// diagnostic when you have writing problems

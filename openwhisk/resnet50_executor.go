@@ -133,6 +133,7 @@ func (proc *resnet50Executor) IsStarted() bool {
 }
 
 func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
+	proc.started = false
 	_, err := proc.input.Write(in)
 	if err != nil {
 		return nil, fmt.Errorf("failed to write to stdin: %w", err)
