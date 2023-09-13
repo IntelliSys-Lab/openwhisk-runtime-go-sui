@@ -138,7 +138,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 		err2 := ap.theresnet18Executor.Start(false)
 		if err2 != nil {
-			Debug("WARNING! Command exited")
+			Debug("WARNING! Command exited?")
 			//ap.theresnet18Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("Res18 command exited！！"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -280,7 +280,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 		// check for early termination
 		if err != nil {
-			Debug("WARNING! Command exited")
+			Debug("WARNING! Command exited?")
 			ap.theresnet152Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet152 command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -323,7 +323,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 		err2 := ap.theresnet152Executor.Start(false)
 		if err2 != nil {
-			Debug("WARNING! Command exited")
+			Debug("WARNING! Command exited>")
 			//ap.theresnet18Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("Res152 command exited！！"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
