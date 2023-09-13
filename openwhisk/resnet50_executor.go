@@ -74,6 +74,12 @@ func (proc *resnet50Executor) Start(waitForAck bool) error {
 	//proc.cmd.Stdout = io.MultiWriter(os.Stdout, writer)
 	//proc.output = bufio.NewReader(reader)
 
+	if proc.cmd.ProcessState == nil {
+		Debug("cmd is NIL")
+	} else {
+		Debug("cmd is Not NIL")
+	}
+
 	err := proc.cmd.Start()
 	if err != nil {
 		proc.cmd = nil // No need to keep the command around if it failed to start
