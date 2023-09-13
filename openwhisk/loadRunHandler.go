@@ -183,9 +183,10 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited")
-			ap.theresnet50Executor = nil
+			//ap.theresnet50Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet50 command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(string(response)))
 			return
 		}
 		DebugLimit("received:", response, 120)
