@@ -217,6 +217,10 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		Debug("NO, executor is not nil")
+		if ap.theresnet50Executor.cmd == nil {
+			Debug("But, cmd is nil")
+		}
+
 		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 		ap.theresnet50Executor = NEWresnet50Executor1
 
