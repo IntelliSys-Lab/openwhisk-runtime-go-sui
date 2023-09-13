@@ -211,20 +211,22 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if ap.theresnet50Executor == nil {
+			Debug("yes, executor is nil")
 			NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 			ap.theresnet50Executor = NEWresnet50Executor1
 		}
 
 		if ap.theresnet50Executor.started == true {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
-
 		}
+
 		err2 := ap.theresnet50Executor.Start(false)
 		if err2 != nil {
 			Debug("WARNING! Command exited?")
 			//ap.theresnet18Executor = nil
-			sendError(w, http.StatusBadRequest, fmt.Sprintf("Res50 command exited！！"))
-			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			//sendError(w, http.StatusBadRequest, fmt.Sprintf("Res50 command exited！！"))
+			//sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			Debug(fmt.Sprintf(err.Error()))
 		}
 
 		// diagnostic when you have writing problems
