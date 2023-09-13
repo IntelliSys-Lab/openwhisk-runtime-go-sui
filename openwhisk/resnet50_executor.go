@@ -76,6 +76,7 @@ func (proc *resnet50Executor) Start(waitForAck bool) error {
 
 	if proc.cmd.ProcessState == nil {
 		Debug("cmd is NIL")
+		print(proc.cmd)
 	} else {
 		Debug("cmd is Not NIL")
 	}
