@@ -172,6 +172,11 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		if len(out) == 0 {
 			return nil, errors.New("no answer from the action")
 		}
+		proc.started = false
+		if proc.cmd != nil {
+			proc.cmd.Process.Kill()
+			proc.cmd = nil
+		}
 		return out, nil
 	case <-proc.exited:
 		//wg.Wait()
