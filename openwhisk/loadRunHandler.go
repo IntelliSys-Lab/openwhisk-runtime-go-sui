@@ -216,6 +216,10 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			ap.theresnet50Executor = NEWresnet50Executor1
 		}
 
+		Debug("NO, executor is not nil")
+		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+		ap.theresnet50Executor = NEWresnet50Executor1
+
 		if ap.theresnet50Executor.started == true {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
 		}
