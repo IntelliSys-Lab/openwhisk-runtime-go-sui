@@ -73,7 +73,7 @@ func NewOriginresnet152Executor(logout *os.File, logerr *os.File, command string
 // If waitForAck is true, it waits indefinitely for an acknowledgement from the command.
 // If waitForAck is false, it waits for a short time to check if the command has exited.
 func (proc *Originresnet152Executor) Start(waitForAck bool) error {
-	Debug("Start Loading ResNet152:")
+	Debug("Origin Start Loading ResNet152:")
 	//reader, writer := io.Pipe()
 	//proc.cmd.Stdout = io.MultiWriter(os.Stdout, writer)
 	//proc.output = bufio.NewReader(reader)

@@ -73,8 +73,8 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	actionName := req.ActionName
 	if strings.Contains(actionName, "ptest04") && (ap.theresnet18Executor.started == false) {
-		NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-		ap.theresnet18Executor = NEWresnet18Executor1
+		//NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		//ap.theresnet18Executor = NEWresnet18Executor1
 		Debug("has created res18executor")
 		response, err = ap.theOriginresnet18Executor.StartAndWaitForOutput()
 
@@ -83,8 +83,8 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		ap.theOriginresnet50Executor = NEWOriginresnet50Executor
 
 	} else if strings.Contains(actionName, "ptest05") && (ap.theresnet50Executor.started == false) {
-		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
-		ap.theresnet50Executor = NEWresnet50Executor1
+		//NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+		//ap.theresnet50Executor = NEWresnet50Executor1
 		Debug("has created res50executor")
 		response, err = ap.theOriginresnet50Executor.StartAndWaitForOutput()
 
@@ -93,8 +93,8 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		ap.theOriginresnet18Executor = NEWOriginresnet18Executor
 
 	} else if strings.Contains(actionName, "ptest06") && (ap.theresnet152Executor.started == false) {
-		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-		ap.theresnet152Executor = NEWresnet152Executor1
+		//NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+		//ap.theresnet152Executor = NEWresnet152Executor1
 		Debug("has created res152executor")
 		response, err = ap.theOriginresnet152Executor.StartAndWaitForOutput()
 
