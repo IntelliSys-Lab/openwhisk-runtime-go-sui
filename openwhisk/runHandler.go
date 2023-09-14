@@ -131,6 +131,8 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 
 	// check if the answer is an object map
 	var objmap map[string]*json.RawMessage
+	resStr := strings.ReplaceAll(string(response), "'", "\"")
+	response = []byte(resStr)
 	err = json.Unmarshal(response, &objmap)
 	if err != nil {
 		sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
