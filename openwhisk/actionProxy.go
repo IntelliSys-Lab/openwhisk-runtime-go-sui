@@ -248,7 +248,7 @@ func (ap *ActionProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ap.loadHandler(w, r)
 	case "/offload":
 		Debug("Proxy Receive an offload Signal")
-		ap.offloadHandler(w, r)
+		//ap.offloadHandler(w, r)
 	case "/run":
 		Debug("Proxy Receive a run Signal")
 		ap.loadRunHandler(w, r)
