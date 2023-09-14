@@ -57,6 +57,7 @@ func (ap *ActionProxy) offloadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet18Executor.started == true {
+			Debug("received a offload signal, now stopping resnet18")
 			ap.theresnet18Executor.Stop()
 		}
 
@@ -70,6 +71,7 @@ func (ap *ActionProxy) offloadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet50Executor.started == true {
+			Debug("received a offload signal, now stopping resnet50")
 			ap.theresnet50Executor.Stop()
 		}
 	} else if strings.Contains(actionName, "ptest06") {
@@ -82,6 +84,7 @@ func (ap *ActionProxy) offloadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet152Executor.started == true {
+			Debug("received a offload signal, now stopping resnet152")
 			ap.theresnet152Executor.Stop()
 		}
 	} else {
