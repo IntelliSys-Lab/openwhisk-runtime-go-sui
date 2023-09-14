@@ -241,14 +241,19 @@ func (ap *ActionProxy) StartLatestAction() error {
 func (ap *ActionProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
 	case "/init":
+		Debug("Proxy Receive an init Signal")
 		ap.initHandler(w, r)
 	case "/load":
+		Debug("Proxy Receive a load Signal")
 		ap.loadHandler(w, r)
 	case "/offload":
+		Debug("Proxy Receive an offload Signal")
 		ap.offloadHandler(w, r)
 	case "/run":
+		Debug("Proxy Receive a run Signal")
 		ap.loadRunHandler(w, r)
 	case "/clean":
+		Debug("Proxy Receive a clean Signal")
 		ap.cleanHandler(w, r)
 	}
 }
