@@ -237,6 +237,65 @@ func (ap *ActionProxy) StartLatestAction() error {
 	return err
 }
 
+func (ap *ActionProxy) StartLatestExecutor() error {
+
+	// find the action if any
+	highestDir := highestDir(ap.baseDir)
+	if highestDir == 0 {
+		Debug("no action found")
+		ap.theExecutor = nil
+		return fmt.Errorf("no valid actions available")
+	}
+
+	// check version
+	execEnv := os.Getenv("OW_EXECUTION_ENV")
+	if execEnv != "" {
+		execEnvFile := fmt.Sprintf("%s/%d/bin/exec.env", ap.baseDir, highestDir)
+		execEnvData, err := ioutil.ReadFile(execEnvFile)
+		if err != nil {
+			return err
+		}
+		if strings.TrimSpace(string(execEnvData)) != execEnv {
+			fmt.Printf("Expected exec.env should start with %s\nActual value: %s", execEnv, execEnvData)
+			return fmt.Errorf("Execution environment version mismatch. See logs for details.")
+		}
+	}
+
+	// save the current executor  将ActionProxy结构体中的成员theExecutor的值赋给curExecutor
+	curExecutor := ap.theExecutor
+
+	// try to launch the action
+	//通过格式化字符串函数生成一个路径，并赋值给executable  /action/1/bin/
+	executable := fmt.Sprintf("%s/%d/bin/exec", ap.baseDir, highestDir)
+	os.Chmod(executable, 0755) //改变executable文件的权限为0755
+	//生成一个新Executor，并将其赋给newExecutor
+	newExecutor := NewExecutor(ap.outFile, ap.errFile, executable, ap.env)
+	Debug("starting %s", executable)
+
+	// start executor 这是唯一使用到executor.Start()的地方
+	//executor.Start()没有将cmd作为input，而是直接读取executor类中的cmd：
+	//也就是executable := fmt.Sprintf("%s/%d/bin/exec", ap.baseDir, highestDir)
+
+	err := newExecutor.Start(os.Getenv("OW_WAIT_FOR_ACK") != "")
+	if err == nil {
+		ap.theExecutor = newExecutor
+		if curExecutor != nil {
+			Debug("stopping old executor")
+			curExecutor.Stop()
+		}
+		return nil
+	}
+
+	// cannot start, removing the action
+	// and leaving the current executor running
+	if !Debugging {
+		exeDir := fmt.Sprintf("./action/%d/", highestDir)
+		Debug("removing the failed action in %s", exeDir)
+		os.RemoveAll(exeDir)
+	}
+	return err
+}
+
 //这里用来处理ContainerProxy.scala发来的signal
 func (ap *ActionProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {

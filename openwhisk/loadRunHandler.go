@@ -65,7 +65,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
 	if strings.Contains(actionName, "ptest04") {
 		// actionName contains "ptest"
-		Debug("done reading %d bytes", len(body))
+		Debug("LoadRunHandler done reading %d bytes", len(body))
 
 		// check if you have an action
 		if ap.theresnet18Executor == nil {
@@ -89,6 +89,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		//}
 
 		// remove newlines
+		Debug("Served By LoadRunHandler")
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
 
 		// execute the action
@@ -177,6 +178,8 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		//if ap.theresnet152Executor.started == true {
 		//	ap.theresnet152Executor.Stop()
 		//}
+
+		Debug("Served By LoadRunHandler")
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -271,6 +274,8 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		//if ap.theresnet50Executor.started == true {
 		//	ap.theresnet50Executor.Stop()
 		//}
+
+		Debug("Served By LoadRunHandler")
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)

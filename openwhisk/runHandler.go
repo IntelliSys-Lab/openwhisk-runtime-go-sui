@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -56,7 +57,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		sendError(w, http.StatusBadRequest, fmt.Sprintf("Error reading request body: %v", err))
 		return
 	}
-	Debug("done reading %d bytes", len(body))
+	Debug("runHandler done reading %d bytes", len(body))
 
 	// check if you have an action
 	if ap.theExecutor == nil {
@@ -124,6 +125,22 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 		ap.theresnet152Executor = NEWresnet152Executor1
 		sendError(w, http.StatusBadRequest, fmt.Sprintf("has created res152executor"))
+	}
+
+	//重新加载executor，为了serve不同的action
+	err = ap.StartLatestExecutor()
+	if err != nil {
+		Debug("Start Latest Executor meets error:")
+		Debug(err.Error())
+		if os.Getenv("OW_LOG_INIT_ERROR") == "" {
+			sendError(w, http.StatusBadGateway, "cannot start action: "+err.Error())
+		} else {
+			ap.errFile.Write([]byte(err.Error() + "\n"))
+			ap.outFile.Write([]byte(OutputGuard))
+			ap.errFile.Write([]byte(OutputGuard))
+			sendError(w, http.StatusBadGateway, "Cannot start action. Check logs for details.")
+		}
+		return
 	}
 
 	// diagnostic when you have writing problems
