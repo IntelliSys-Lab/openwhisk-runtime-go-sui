@@ -63,6 +63,9 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 
 		//Pre-load libraries & model
 		err := ap.theresnet18Executor.Start(false)
+
+		Debug("Handler Finished pre-loading ResNet18.")
+
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited (loadHandler)")
@@ -87,6 +90,8 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 
 		//Pre-load libraries & model
 		err := ap.theresnet50Executor.Start(false)
+		Debug("Handler Finished pre-loading ResNet50.")
+
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited (load)")
@@ -110,6 +115,8 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 
 		//Pre-load libraries & model
 		err := ap.theresnet152Executor.Start(false)
+		Debug("Handler Finished pre-loading ResNet152.")
+
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited(load)")

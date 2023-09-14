@@ -86,7 +86,7 @@ func (proc *resnet18Executor) Start(waitForAck bool) error {
 
 	proc.started = true
 
-	Debug("Finished pre-loading ResNet18.")
+	Debug("Executor Finished pre-loading ResNet18.")
 
 	go func() {
 		proc.cmd.Wait()
