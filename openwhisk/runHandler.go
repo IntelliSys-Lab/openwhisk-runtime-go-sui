@@ -79,8 +79,8 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		response, err = ap.theOriginresnet18Executor.StartAndWaitForOutput()
 
 		//重建新的executor
-		NEWOriginresnet50Executor := NewOriginresnet50Executor(ap.outFile, ap.errFile, "_test/func50.sh", ap.env)
-		ap.theOriginresnet50Executor = NEWOriginresnet50Executor
+		NEWOriginresnet18Executor := NewOriginresnet18Executor(ap.outFile, ap.errFile, "_test/func50.sh", ap.env)
+		ap.theOriginresnet18Executor = NEWOriginresnet18Executor
 
 	} else if strings.Contains(actionName, "ptest05") && (ap.theresnet50Executor.started == false) {
 		//NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
