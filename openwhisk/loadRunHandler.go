@@ -89,7 +89,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		//}
 
 		// remove newlines
-		Debug("Served By LoadRunHandler")
+		Debug("Served By LoadRunHandler18")
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
 
 		// execute the action
@@ -179,7 +179,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		//	ap.theresnet152Executor.Stop()
 		//}
 
-		Debug("Served By LoadRunHandler")
+		Debug("Served By LoadRunHandler50")
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -275,7 +275,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		//	ap.theresnet50Executor.Stop()
 		//}
 
-		Debug("Served By LoadRunHandler")
+		Debug("Served By LoadRunHandler152")
 
 		// remove newlines
 		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
@@ -319,7 +319,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if ap.theresnet152Executor.started == true {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet152"))
+			Debug("already loaded resnet152")
 		}
 
 		//重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。

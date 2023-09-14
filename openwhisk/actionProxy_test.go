@@ -21,14 +21,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 	"testing"
-	"time"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func Example_startTestServer() {
@@ -111,22 +109,24 @@ func TestStartLatestAction_emit2(t *testing.T) {
 	fmt.Println(string(actionName))
 
 	// load model
-	err1 := ap.theresnet50Executor.Start(false)
+	//err1 := ap.theresnet50Executor.Start(false)
+	res, _ := ap.theOriginresnet18Executor.StartAndWaitForOutput()
 
-	fmt.Println(string("Noerr:"))
-	//fmt.Println(err1.Error())
-	// check for early termination
-	if err1 != nil {
-		Debug("WARNING! Command exited")
-		fmt.Println(string("err:"))
-		//ap.theresnet50Executor = nil
-		//return
-	}
-	time.Sleep(10 * time.Second)
-	res, _ := ap.theresnet50Executor.Interact([]byte(bodyBytes))
+	//fmt.Println(string("Noerr:"))
+	////fmt.Println(err1.Error())
+	//// check for early termination
+	//if err1 != nil {
+	//	Debug("WARNING! Command exited")
+	//	fmt.Println(string("err:"))
+	//	//ap.theresnet50Executor = nil
+	//	//return
+	//}
+	////time.Sleep(10 * time.Second)
+	//res, _ := ap.theresnet50Executor.Interact([]byte(bodyBytes))
 
 	fmt.Println(string("res:"))
 	fmt.Println(string(res))
+	//fmt.Println(string(err1.Error()))
 
 	//New added
 	//output := strings.ReplaceAll(string(res), "'", "\"")
@@ -153,9 +153,7 @@ func TestStartLatestAction_emit2(t *testing.T) {
 	res = []byte(resStr)
 	fmt.Println([]byte(resStr))
 	fmt.Println(string(res))
-
-	ap.theresnet50Executor.Stop()
-	//dump(logf)
+	dump(logf)
 }
 
 func Example_compile_bin() {

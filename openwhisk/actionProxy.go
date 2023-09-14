@@ -48,9 +48,12 @@ type ActionProxy struct {
 	theExecutor *Executor
 
 	// theChannel is the channel communicating with the action
-	theresnet18Executor  *resnet18Executor
-	theresnet50Executor  *resnet50Executor
-	theresnet152Executor *resnet152Executor
+	theresnet18Executor        *resnet18Executor
+	theresnet50Executor        *resnet50Executor
+	theresnet152Executor       *resnet152Executor
+	theOriginresnet18Executor  *Originresnet18Executor
+	theOriginresnet50Executor  *Originresnet50Executor
+	theOriginresnet152Executor *Originresnet152Executor
 
 	// out and err files
 	outFile *os.File
@@ -68,6 +71,9 @@ func NewActionProxy(baseDir string, compiler string, outFile *os.File, errFile *
 		baseDir,
 		compiler,
 		highestDir(baseDir),
+		nil,
+		nil,
+		nil,
 		nil,
 		nil,
 		nil,
@@ -162,6 +168,15 @@ func (ap *ActionProxy) StartLatestAction() error {
 	if ap.theresnet152Executor == nil {
 		ap.theresnet152Executor = NEWresnet152Executor
 	}
+
+	NEWOriginresnet18Executor := NewOriginresnet18Executor(ap.outFile, ap.errFile, "_test/func18.sh", ap.env)
+	ap.theOriginresnet18Executor = NEWOriginresnet18Executor
+
+	NEWOriginresnet50Executor := NewOriginresnet50Executor(ap.outFile, ap.errFile, "_test/func50.sh", ap.env)
+	ap.theOriginresnet50Executor = NEWOriginresnet50Executor
+
+	NEWOriginresnet152Executor := NewOriginresnet152Executor(ap.outFile, ap.errFile, "_test/func152.sh", ap.env)
+	ap.theOriginresnet152Executor = NEWOriginresnet152Executor
 
 	//// Save the current executors
 	//curResnet18Executor := ap.theresnet18Executor
