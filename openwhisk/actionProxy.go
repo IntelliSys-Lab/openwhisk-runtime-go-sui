@@ -153,9 +153,15 @@ func (ap *ActionProxy) StartLatestAction() error {
 	NEWresnet18Executor := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
 	NEWresnet50Executor := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 	NEWresnet152Executor := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-	ap.theresnet18Executor = NEWresnet18Executor
-	ap.theresnet50Executor = NEWresnet50Executor
-	ap.theresnet152Executor = NEWresnet152Executor
+	if ap.theresnet18Executor == nil {
+		ap.theresnet18Executor = NEWresnet18Executor
+	}
+	if ap.theresnet50Executor == nil {
+		ap.theresnet50Executor = NEWresnet50Executor
+	}
+	if ap.theresnet152Executor == nil {
+		ap.theresnet152Executor = NEWresnet152Executor
+	}
 
 	//// Save the current executors
 	//curResnet18Executor := ap.theresnet18Executor
