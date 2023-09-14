@@ -79,6 +79,7 @@ func TestStartLatestAction_emit2(t *testing.T) {
 	buf := []byte("#!/bin/sh\nwhile read a; do echo 2 >&3 ; done\n")
 	ap.ExtractAction(&buf, "bin")
 	ap.StartLatestAction()
+
 	body := map[string]interface{}{
 		"action_name":    "/guest/test05",
 		"action_version": "0.0.1",
@@ -110,7 +111,7 @@ func TestStartLatestAction_emit2(t *testing.T) {
 
 	// load model
 	//err1 := ap.theresnet50Executor.Start(false)
-	res, _ := ap.theOriginresnet18Executor.StartAndWaitForOutput()
+	res, _ := ap.theOriginresnet50Executor.StartAndWaitForOutput()
 
 	//fmt.Println(string("Noerr:"))
 	////fmt.Println(err1.Error())
@@ -127,21 +128,6 @@ func TestStartLatestAction_emit2(t *testing.T) {
 	fmt.Println(string("res:"))
 	fmt.Println(string(res))
 	//fmt.Println(string(err1.Error()))
-
-	//New added
-	//output := strings.ReplaceAll(string(res), "'", "\"")
-	//var data map[string]interface{}
-	//err = json.Unmarshal([]byte(output), &data)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
-	//jsonOutput, err := json.Marshal(data)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
-	//fmt.Print(string(jsonOutput))
 
 	var objmap map[string]*json.RawMessage
 	fmt.Println("JSON:")
