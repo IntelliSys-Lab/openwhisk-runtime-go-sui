@@ -191,7 +191,7 @@ func (proc *resnet152Executor) Interact(in []byte) ([]byte, error) {
 // Stop will kill the process
 // and close the channels
 func (proc *resnet152Executor) Stop() {
-	Debug("stopping")
+	Debug("stopping res152")
 	proc.started = false
 	if proc.cmd != nil {
 		proc.cmd.Process.Kill()

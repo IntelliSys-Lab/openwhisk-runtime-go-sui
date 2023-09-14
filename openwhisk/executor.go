@@ -195,7 +195,7 @@ func (proc *Executor) Start(waitForAck bool) error {
 // Stop will kill the process
 // and close the channels
 func (proc *Executor) Stop() {
-	Debug("stopping")
+	Debug("stopping original executor")
 	if proc.cmd != nil {
 		proc.cmd.Process.Kill()
 		proc.cmd = nil

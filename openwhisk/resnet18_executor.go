@@ -46,11 +46,15 @@ func Newresnet18Executor(logout *os.File, logerr *os.File, command string, env m
 
 	input, err := cmd.StdinPipe() //调用 *Cmd 的 StdinPipe 方法，返回一个连接到命令标准输入的管道和一个错误
 	if err != nil {
+		print("resnet18executor input meets an error:")
+		print(err.Error())
 		return nil
 	}
 
 	output, err := cmd.StdoutPipe()
 	if err != nil {
+		print("resnet18executor output meets an error:")
+		print(err.Error())
 		return nil
 	}
 
@@ -179,7 +183,7 @@ func (proc *resnet18Executor) Interact(in []byte) ([]byte, error) {
 // Stop will kill the process
 // and close the channels
 func (proc *resnet18Executor) Stop() {
-	Debug("stopping")
+	Debug("stopping res18")
 	proc.started = false
 	if proc.cmd != nil {
 		proc.cmd.Process.Kill()
