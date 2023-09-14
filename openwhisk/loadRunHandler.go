@@ -157,7 +157,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if strings.Contains(actionName, "ptest05") {
 		// actionName contains "ptest"
-		Debug("done reading %d bytes", len(body))
+		Debug("LoadRunHandler done reading %d bytes", len(body))
 
 		// check if you have an action
 		if ap.theresnet50Executor == nil {
@@ -253,7 +253,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if strings.Contains(actionName, "ptest06") {
 		// actionName contains "ptest"
-		Debug("done reading %d bytes", len(body))
+		Debug("LoadRunHandler done reading %d bytes", len(body))
 
 		// check if you have an action
 		if ap.theresnet152Executor == nil {
