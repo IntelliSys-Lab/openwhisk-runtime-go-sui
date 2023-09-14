@@ -175,9 +175,8 @@ func (proc *Originresnet50Executor) Interact(in []byte) ([]byte, error) {
 }
 
 func (proc *Originresnet50Executor) StartAndWaitForOutput() ([]byte, error) {
-	Debug("Start Loading ResNet50:")
+	Debug("Start Loading Origin ResNet50:")
 	// start the underlying executable
-	Debug("Start:")
 	err1 := proc.cmd.Start() //调用 *Cmd 的 Start 方法，开始执行命令
 	if err1 != nil {         //如果有错误，输出错误信息并返回一个 "command exited" 的错误
 		Debug("run: early exit")

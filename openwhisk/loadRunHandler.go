@@ -169,6 +169,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if ap.theresnet50Executor.started == false {
 			ap.runHandler(w, r)
+			return
 		}
 
 		////停止其他model的进程
