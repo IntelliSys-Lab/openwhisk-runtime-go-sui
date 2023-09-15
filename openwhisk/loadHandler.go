@@ -58,20 +58,19 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-		ap.theresnet18Executor = NEWresnet18Executor1
+		//NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		//ap.theresnet18Executor = NEWresnet18Executor1
 
 		//Pre-load libraries & model
 		err := ap.theresnet18Executor.Start(false)
 
 		Debug("Handler Finished pre-loading ResNet18.")
-
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited (loadHandler)")
 			//ap.theresnet18Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
-			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			Debug(err.Error())
 			return
 		}
 	} else if strings.Contains(actionName, "ptest05") {
@@ -85,8 +84,8 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
-		ap.theresnet50Executor = NEWresnet50Executor1
+		//NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+		//ap.theresnet50Executor = NEWresnet50Executor1
 
 		//Pre-load libraries & model
 		err := ap.theresnet50Executor.Start(false)
@@ -96,6 +95,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			Debug("WARNING! Command exited (load)")
 			//ap.theresnet50Executor = nil
+			Debug(err.Error())
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
 			return
 		}
@@ -110,8 +110,8 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-		ap.theresnet152Executor = NEWresnet152Executor1
+		//NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+		//ap.theresnet152Executor = NEWresnet152Executor1
 
 		//Pre-load libraries & model
 		err := ap.theresnet152Executor.Start(false)
@@ -121,6 +121,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			Debug("WARNING! Command exited(load)")
 			//ap.theresnet152Executor = nil
+			Debug(err.Error())
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
 			return
 		}
