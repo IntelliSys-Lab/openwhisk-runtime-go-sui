@@ -50,11 +50,11 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.Contains(actionName, "ptest04") {
 		// check if you have an action
 		if ap.theresnet18Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (load)"))
+			Debug("no 18 action defined yet (load)")
 			return
 		}
 		if ap.theresnet18Executor.started == true {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet18"))
+			Debug("already loaded resnet18")
 			return
 		}
 
@@ -76,11 +76,11 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 	} else if strings.Contains(actionName, "ptest05") {
 		// check if you have an action
 		if ap.theresnet50Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (load)"))
+			Debug("no 50 action defined yet (load)")
 			return
 		}
 		if ap.theresnet50Executor.started == true {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
+			Debug("already loaded resnet50")
 			return
 		}
 
