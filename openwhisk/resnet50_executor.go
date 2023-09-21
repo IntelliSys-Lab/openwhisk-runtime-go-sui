@@ -73,15 +73,13 @@ func (proc *resnet50Executor) Start(waitForAck bool) error {
 	//reader, writer := io.Pipe()
 	//proc.cmd.Stdout = io.MultiWriter(os.Stdout, writer)
 	//proc.output = bufio.NewReader(reader)
-
+	proc.started = true
 	err := proc.cmd.Start()
 	if err != nil {
 		proc.cmd = nil // No need to keep the command around if it failed to start
 		Debug(err.Error())
 		return fmt.Errorf("failed to start command: %w", err)
 	}
-
-	proc.started = true
 
 	Debug("Executor Finished pre-loading ResNet50.")
 
