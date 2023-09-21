@@ -139,7 +139,6 @@ func (proc *resnet18Executor) IsStarted() bool {
 }
 
 func (proc *resnet18Executor) Interact(in []byte) ([]byte, error) {
-	proc.started = false
 	_, err := proc.input.Write(in)
 	if err != nil {
 		return nil, fmt.Errorf("failed to write to stdin: %w", err)
@@ -160,6 +159,8 @@ func (proc *resnet18Executor) Interact(in []byte) ([]byte, error) {
 		_, err := io.Copy(&outputBuffer, proc.output)
 		if err != nil {
 			// Handle error, maybe log it or send it somewhere else.
+			Debug("Meet Error while Interacting!:")
+			Debug(err.Error())
 			fmt.Errorf("meet error when copy output: %w", err)
 		}
 		chout <- outputBuffer.Bytes()
@@ -170,8 +171,10 @@ func (proc *resnet18Executor) Interact(in []byte) ([]byte, error) {
 		if len(out) == 0 {
 			return nil, errors.New("no answer from the action")
 		}
+		proc.started = false
 		return out, nil
 	case <-proc.exited:
+		proc.started = false
 		return nil, errors.New("command exited!!!!!!!!")
 	}
 }

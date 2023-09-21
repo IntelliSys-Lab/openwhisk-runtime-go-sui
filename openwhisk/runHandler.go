@@ -68,7 +68,8 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 	var req requestBody
 	err = json.Unmarshal(body, &req)
 	if err != nil {
-		sendError(w, http.StatusBadRequest, fmt.Sprintf("Error reading request body: %v", err))
+		Debug("Meet error:")
+		Debug(err.Error())
 		return
 	}
 	actionName := req.ActionName

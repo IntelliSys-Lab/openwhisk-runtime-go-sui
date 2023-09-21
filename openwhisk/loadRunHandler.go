@@ -76,6 +76,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet18Executor.started == false {
+			Debug("Haven't pre-loaded resnet18")
 			ap.runHandler(w, r)
 			return
 		}
@@ -169,6 +170,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet50Executor.started == false {
+			Debug("Haven't pre-loaded resnet50")
 			ap.runHandler(w, r)
 			return
 		}
@@ -265,6 +267,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.theresnet152Executor.started == false {
+			Debug("Haven't pre-loaded resnet152")
 			ap.runHandler(w, r)
 			return
 		}
