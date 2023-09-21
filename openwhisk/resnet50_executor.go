@@ -210,7 +210,7 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		chout <- line
 	}()
 
-	timer := time.NewTimer(3 * time.Second)
+	timer := time.NewTimer(10 * time.Second)
 
 	select {
 	case out := <-chout:
