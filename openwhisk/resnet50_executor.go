@@ -197,14 +197,12 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 	}
 
 	chout := make(chan []byte)
-	var wg sync.WaitGroup
 
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
 		scanner := bufio.NewScanner(proc.output)
 		for scanner.Scan() {
 			chout <- scanner.Bytes()
+			return
 		}
 		if err := scanner.Err(); err != nil {
 			Debug("Meet Error while Interacting!:")
@@ -218,7 +216,6 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 
 	select {
 	case out := <-chout:
-		wg.Wait() // Ensure the goroutine finishes
 		if len(out) == 0 {
 			return nil, errors.New("no answer from the action")
 		}
