@@ -86,9 +86,10 @@ func (proc *resnet152Executor) Start(waitForAck bool) error {
 	//proc.cmd.Stdout = io.MultiWriter(os.Stdout, writer)
 	//proc.output = bufio.NewReader(reader)
 	proc.started = true
-	
+
 	err := proc.cmd.Start()
 	if err != nil {
+		Debug(err.Error())
 		proc.cmd = nil // No need to keep the command around if it failed to start
 		return fmt.Errorf("failed to start command: %w", err)
 	}

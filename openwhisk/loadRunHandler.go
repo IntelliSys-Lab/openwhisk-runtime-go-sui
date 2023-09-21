@@ -124,28 +124,28 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		if ap.theresnet18Executor == nil {
-			NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-			ap.theresnet18Executor = NEWresnet18Executor1
-		}
-
-		if ap.theresnet18Executor.started == true {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet18"))
-		}
-
-		//重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-		ap.theresnet18Executor = NEWresnet18Executor1
-
-		err2 := ap.theresnet18Executor.Start(false)
-		if err2 != nil {
-			Debug("WARNING! Command exited?")
-			//ap.theresnet18Executor = nil
-			Debug(err.Error())
-			sendError(w, http.StatusBadRequest, fmt.Sprintf("Res18 command exited！！"))
-			sendError(w, http.StatusBadRequest, fmt.Sprintf(err2.Error()))
-
-		}
+		//if ap.theresnet18Executor == nil {
+		//	NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		//	ap.theresnet18Executor = NEWresnet18Executor1
+		//}
+		//
+		//if ap.theresnet18Executor.started == true {
+		//	sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet18"))
+		//}
+		//
+		////重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
+		//NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+		//ap.theresnet18Executor = NEWresnet18Executor1
+		//
+		//err2 := ap.theresnet18Executor.Start(false)
+		//if err2 != nil {
+		//	Debug("WARNING! Command exited?")
+		//	//ap.theresnet18Executor = nil
+		//	Debug(err.Error())
+		//	sendError(w, http.StatusBadRequest, fmt.Sprintf("Res18 command exited！！"))
+		//	sendError(w, http.StatusBadRequest, fmt.Sprintf(err2.Error()))
+		//
+		//}
 
 		// diagnostic when you have writing problems
 		if err != nil {
@@ -226,22 +226,22 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			ap.theresnet50Executor = NEWresnet50Executor1
 		}
 
-		//重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
-		ap.theresnet50Executor = NEWresnet50Executor1
-
-		if ap.theresnet50Executor.started == true {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
-		}
-
-		err2 := ap.theresnet50Executor.Start(false)
-		if err2 != nil {
-			Debug("WARNING! Command exited?")
-			//ap.theresnet18Executor = nil
-			//sendError(w, http.StatusBadRequest, fmt.Sprintf("Res50 command exited！！"))
-			//sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
-			Debug(err.Error())
-		}
+		////重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
+		//NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+		//ap.theresnet50Executor = NEWresnet50Executor1
+		//
+		//if ap.theresnet50Executor.started == true {
+		//	sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
+		//}
+		//
+		//err2 := ap.theresnet50Executor.Start(false)
+		//if err2 != nil {
+		//	Debug("WARNING! Command exited?")
+		//	//ap.theresnet18Executor = nil
+		//	//sendError(w, http.StatusBadRequest, fmt.Sprintf("Res50 command exited！！"))
+		//	//sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+		//	Debug(err.Error())
+		//}
 
 		// diagnostic when you have writing problems
 		if err != nil {
@@ -314,27 +314,27 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		if ap.theresnet152Executor == nil {
-			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
-			NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-			ap.theresnet152Executor = NEWresnet152Executor1
-		}
-
-		if ap.theresnet152Executor.started == true {
-			Debug("already loaded resnet152")
-		}
-
-		//重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-		ap.theresnet152Executor = NEWresnet152Executor1
-
-		err2 := ap.theresnet152Executor.Start(false)
-		if err2 != nil {
-			Debug("WARNING! Command exited>")
-			//ap.theresnet18Executor = nil
-			sendError(w, http.StatusBadRequest, fmt.Sprintf("Res152 command exited！！"))
-			sendError(w, http.StatusBadRequest, fmt.Sprintf(err2.Error()))
-		}
+		//if ap.theresnet152Executor == nil {
+		//	//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+		//	NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+		//	ap.theresnet152Executor = NEWresnet152Executor1
+		//}
+		//
+		//if ap.theresnet152Executor.started == true {
+		//	Debug("already loaded resnet152")
+		//}
+		//
+		////重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
+		//NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+		//ap.theresnet152Executor = NEWresnet152Executor1
+		//
+		//err2 := ap.theresnet152Executor.Start(false)
+		//if err2 != nil {
+		//	Debug("WARNING! Command exited>")
+		//	//ap.theresnet18Executor = nil
+		//	sendError(w, http.StatusBadRequest, fmt.Sprintf("Res152 command exited！！"))
+		//	sendError(w, http.StatusBadRequest, fmt.Sprintf(err2.Error()))
+		//}
 
 		// diagnostic when you have writing problems
 		if err != nil {

@@ -81,6 +81,7 @@ func (proc *resnet18Executor) Start(waitForAck bool) error {
 
 	err := proc.cmd.Start()
 	if err != nil {
+		Debug(err.Error())
 		proc.cmd = nil // No need to keep the command around if it failed to start
 		return fmt.Errorf("failed to start command: %w", err)
 	}
