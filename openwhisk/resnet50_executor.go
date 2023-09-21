@@ -151,6 +151,11 @@ func (proc *resnet50Executor) Interact1(in []byte) ([]byte, error) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
+		/*
+			在原始的代码中，你的 go func() goroutine 是通过 io.Copy() 来获取子进程的所有输出的。
+			然而，io.Copy() 会一直读取直到遇到EOF或者发生错误。这就导致了问题，
+			因为你提到子进程是永远不会结束的，所以 io.Copy() 会一直等待更多的输出，而不会返回结果。
+		*/
 		_, err := io.Copy(&outputBuffer, proc.output)
 		if err != nil {
 			// Handle error, maybe log it or send it somewhere else.
@@ -191,25 +196,24 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		return nil, fmt.Errorf("failed to write newline to stdin: %w", err)
 	}
 
-	var outputBuffer bytes.Buffer
 	chout := make(chan []byte)
 	var wg sync.WaitGroup
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		_, err := io.Copy(&outputBuffer, proc.output)
-		if err != nil {
-			// Handle error, maybe log it or send it somewhere else.
+		scanner := bufio.NewScanner(proc.output)
+		for scanner.Scan() {
+			chout <- scanner.Bytes()
+		}
+		if err := scanner.Err(); err != nil {
 			Debug("Meet Error while Interacting!:")
 			Debug(err.Error())
-			fmt.Errorf("meet error when copy output: %w", err)
+			fmt.Errorf("meet error when scanning output: %w", err)
 		}
-		chout <- outputBuffer.Bytes()
 	}()
 
-	// Use a timer to avoid blocking forever
-	timer := time.NewTimer(10 * time.Second)
+	timer := time.NewTimer(3 * time.Second)
 	defer timer.Stop()
 
 	select {
