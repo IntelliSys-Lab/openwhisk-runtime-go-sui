@@ -94,7 +94,7 @@ func (proc *resnet152Executor) Start(waitForAck bool) error {
 		proc.cmd = nil // No need to keep the command around if it failed to start
 		return fmt.Errorf("failed to start command: %w", err)
 	}
-
+	Debug("resnet152 pid: %d", proc.cmd.Process.Pid) //如果 Debugging 是 true，则在调试日志中输出命令的进程 ID
 	Debug("Executor Finished pre-loading ResNet152.")
 
 	go func() {
