@@ -133,6 +133,53 @@ func (proc *resnet50Executor) IsStarted() bool {
 	return proc.started
 }
 
+func (proc *resnet50Executor) Interact1(in []byte) ([]byte, error) {
+	_, err := proc.input.Write(in)
+	if err != nil {
+		return nil, fmt.Errorf("failed to write to stdin: %w", err)
+	}
+
+	_, err = proc.input.Write([]byte("\n"))
+	if err != nil {
+		return nil, fmt.Errorf("failed to write newline to stdin: %w", err)
+	}
+
+	var outputBuffer bytes.Buffer
+	chout := make(chan []byte)
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		_, err := io.Copy(&outputBuffer, proc.output)
+		if err != nil {
+			// Handle error, maybe log it or send it somewhere else.
+			Debug("Meet Error while Interacting!:")
+			Debug(err.Error())
+			fmt.Errorf("meet error when copy output: %w", err)
+		}
+		chout <- outputBuffer.Bytes()
+	}()
+
+	//这个是不行的：
+	/* 如果Python子进程在输出结果后并不立即退出，那么 case <-proc.exited: 就会阻塞，
+	即使 chout 通道中已经有了Python子进程的输出。
+	在这种情况下，你的 Interact 方法将会一直等待，直到超时。
+	*/
+
+	select {
+	case out := <-chout:
+		if len(out) == 0 {
+			return nil, errors.New("no answer from the action")
+		}
+		proc.started = false
+		return out, nil
+	case <-proc.exited:
+		proc.started = false
+		return nil, errors.New("command exited!!!!!!!!")
+	}
+}
+
 func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 	_, err := proc.input.Write(in)
 	if err != nil {
@@ -161,16 +208,21 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		chout <- outputBuffer.Bytes()
 	}()
 
+	// Use a timer to avoid blocking forever
+	timer := time.NewTimer(2 * time.Second)
+	defer timer.Stop()
+
 	select {
 	case out := <-chout:
+		wg.Wait() // Ensure the goroutine finishes
 		if len(out) == 0 {
 			return nil, errors.New("no answer from the action")
 		}
 		proc.started = false
 		return out, nil
-	case <-proc.exited:
+	case <-timer.C:
 		proc.started = false
-		return nil, errors.New("command exited!!!!!!!!")
+		return nil, errors.New("operation timed out")
 	}
 }
 
