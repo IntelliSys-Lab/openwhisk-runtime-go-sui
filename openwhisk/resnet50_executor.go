@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -276,6 +277,24 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 // and close the channels
 func (proc *resnet50Executor) Stop() {
 	Debug("stopping res50")
+	pidStr := string(proc.cmd.Process.Pid + 1)
+	pid, err := strconv.Atoi(pidStr)
+	if err != nil {
+		fmt.Printf("Failed to convert pid to integer: %v\n", err)
+		return
+	}
+
+	process, err := os.FindProcess(pid)
+	if err != nil {
+		fmt.Printf("Failed to find process: %v\n", err)
+		return
+	}
+	err = process.Kill()
+	if err != nil {
+		fmt.Printf("Failed to kill process: %v\n", err)
+		return
+	}
+
 	proc.started = false
 	if proc.cmd != nil {
 		proc.cmd.Process.Kill()
