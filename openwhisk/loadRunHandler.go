@@ -80,13 +80,13 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		////停止其他model的进程
-		//if ap.theresnet50Executor.started == true {
-		//	ap.theresnet50Executor.Stop()
-		//}
-		//if ap.theresnet152Executor.started == true {
-		//	ap.theresnet152Executor.Stop()
-		//}
+		//停止其他model的进程
+		if ap.theresnet50Executor.started == true {
+			ap.theresnet50Executor.Stop()
+		}
+		if ap.theresnet152Executor.started == true {
+			ap.theresnet152Executor.Stop()
+		}
 
 		// remove newlines
 		Debug("Served By LoadRunHandler18")
@@ -173,13 +173,13 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		////停止其他model的进程
-		//if ap.theresnet18Executor.started == true {
-		//	ap.theresnet18Executor.Stop()
-		//}
-		//if ap.theresnet152Executor.started == true {
-		//	ap.theresnet152Executor.Stop()
-		//}
+		//停止其他model的进程
+		if ap.theresnet18Executor.started == true {
+			ap.theresnet18Executor.Stop()
+		}
+		if ap.theresnet152Executor.started == true {
+			ap.theresnet152Executor.Stop()
+		}
 
 		Debug("Served By LoadRunHandler50")
 
@@ -269,13 +269,13 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		////停止其他model的进程
-		//if ap.theresnet18Executor.started == true {
-		//	ap.theresnet18Executor.Stop()
-		//}
-		//if ap.theresnet50Executor.started == true {
-		//	ap.theresnet50Executor.Stop()
-		//}
+		//停止其他model的进程
+		if ap.theresnet18Executor.started == true {
+			ap.theresnet18Executor.Stop()
+		}
+		if ap.theresnet50Executor.started == true {
+			ap.theresnet50Executor.Stop()
+		}
 
 		Debug("Served By LoadRunHandler152")
 
