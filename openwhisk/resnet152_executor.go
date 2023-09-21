@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"strconv"
 	"sync"
 	"time"
 )
@@ -193,30 +192,29 @@ func (proc *resnet152Executor) Interact(in []byte) ([]byte, error) {
 // and close the channels
 func (proc *resnet152Executor) Stop() {
 	Debug("stopping res152")
-	Debug("resnet152 pid: %d", proc.cmd.Process.Pid)
-	pidStr := string(proc.cmd.Process.Pid + 1)
-	pid, err := strconv.Atoi(pidStr)
-	if err != nil {
-		fmt.Printf("Failed to convert pid to integer: %v\n", err)
-		return
-	}
-
-	process, err := os.FindProcess(pid)
-	if err != nil {
-		fmt.Printf("Failed to find process: %v\n", err)
-		return
-	}
-	err = process.Kill()
-	if err != nil {
-		fmt.Printf("Failed to kill process: %v\n", err)
-		return
-	}
 
 	proc.started = false
 	if proc.cmd != nil {
-		proc.cmd.Process.Kill()
+		// Get the process to kill
+		processToKill, err := os.FindProcess(proc.cmd.Process.Pid + 1)
+		if err != nil {
+			Debug("Failed to find process: %v", err)
+			return
+		}
+
+		// Kill the process
+		if err := processToKill.Kill(); err != nil {
+			Debug("Failed to kill process: %v", err)
+			return
+		}
+
+		// Release the process
+		if err := processToKill.Release(); err != nil {
+			Debug("Failed to release process: %v", err)
+		}
+
+		proc.started = false
 		proc.cmd = nil
 	}
-
 	runtime.GC()
 }
