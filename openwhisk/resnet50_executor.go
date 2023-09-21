@@ -199,23 +199,24 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 	chout := make(chan []byte)
 
 	go func() {
-		scanner := bufio.NewScanner(proc.output)
-		for scanner.Scan() {
-			chout <- scanner.Bytes()
-			return
-		}
-		if err := scanner.Err(); err != nil {
+		reader := bufio.NewReader(proc.output)
+		line, _, err := reader.ReadLine()
+		if err != nil {
 			Debug("Meet Error while Interacting!:")
 			Debug(err.Error())
 			fmt.Errorf("meet error when scanning output: %w", err)
+			return
 		}
+		chout <- line
 	}()
 
 	timer := time.NewTimer(3 * time.Second)
-	defer timer.Stop()
 
 	select {
 	case out := <-chout:
+		if !timer.Stop() {
+			<-timer.C
+		}
 		if len(out) == 0 {
 			return nil, errors.New("no answer from the action")
 		}
@@ -226,6 +227,48 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		return nil, errors.New("operation timed out")
 	}
 }
+
+//func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
+//	_, err := proc.input.Write(in)
+//	if err != nil {
+//		return nil, fmt.Errorf("failed to write to stdin: %w", err)
+//	}
+//
+//	_, err = proc.input.Write([]byte("\n"))
+//	if err != nil {
+//		return nil, fmt.Errorf("failed to write newline to stdin: %w", err)
+//	}
+//
+//	chout := make(chan []byte)
+//
+//	go func() {
+//		scanner := bufio.NewScanner(proc.output)
+//		for scanner.Scan() {
+//			chout <- scanner.Bytes()
+//			return
+//		}
+//		if err := scanner.Err(); err != nil {
+//			Debug("Meet Error while Interacting!:")
+//			Debug(err.Error())
+//			fmt.Errorf("meet error when scanning output: %w", err)
+//		}
+//	}()
+//
+//	timer := time.NewTimer(3 * time.Second)
+//	defer timer.Stop()
+//
+//	select {
+//	case out := <-chout:
+//		if len(out) == 0 {
+//			return nil, errors.New("no answer from the action")
+//		}
+//		proc.started = false
+//		return out, nil
+//	case <-timer.C:
+//		proc.started = false
+//		return nil, errors.New("operation timed out")
+//	}
+//}
 
 // Stop will kill the process
 // and close the channels

@@ -27,6 +27,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 func Example_startTestServer() {
@@ -110,23 +111,25 @@ func TestStartLatestAction_emit2(t *testing.T) {
 	fmt.Println(string(actionName))
 
 	// load model
-	//err1 := ap.theresnet50Executor.Start(false)
-	res, _ := ap.theOriginresnet50Executor.StartAndWaitForOutput()
+	err1 := ap.theresnet50Executor.Start(false)
+	//res, _ := ap.theOriginresnet50Executor.StartAndWaitForOutput()
 
-	//fmt.Println(string("Noerr:"))
-	////fmt.Println(err1.Error())
-	//// check for early termination
-	//if err1 != nil {
-	//	Debug("WARNING! Command exited")
-	//	fmt.Println(string("err:"))
-	//	//ap.theresnet50Executor = nil
-	//	//return
-	//}
-	////time.Sleep(10 * time.Second)
-	//res, _ := ap.theresnet50Executor.Interact([]byte(bodyBytes))
+	fmt.Println(string("Noerr:"))
+	//fmt.Println(err1.Error())
+	// check for early termination
+	if err1 != nil {
+		Debug("WARNING! Command exited")
+		fmt.Println(string("err:"))
+		//ap.theresnet50Executor = nil
+		//return
+	}
+	time.Sleep(1 * time.Second)
+	res, _ := ap.theresnet50Executor.Interact([]byte(bodyBytes))
 
 	fmt.Println(string("res:"))
 	fmt.Println(string(res))
+	//fmt.Println(string("err:"))
+	//fmt.Println(string(err2.Error()))
 	//fmt.Println(string(err1.Error()))
 
 	var objmap map[string]*json.RawMessage
