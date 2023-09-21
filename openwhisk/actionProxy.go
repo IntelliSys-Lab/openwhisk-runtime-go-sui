@@ -157,7 +157,7 @@ func (ap *ActionProxy) StartLatestAction() error {
 
 	//为每个model的function都创建一个executor：
 	NEWresnet18Executor := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-	NEWresnet50Executor := Newresnet50Executor(ap.outFile, ap.errFile, "_test/pytest.sh", ap.env)
+	NEWresnet50Executor := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 	NEWresnet152Executor := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 	if ap.theresnet18Executor == nil {
 		ap.theresnet18Executor = NEWresnet18Executor
