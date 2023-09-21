@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"runtime"
 	"sync"
 	"time"
 )
@@ -223,4 +224,5 @@ func (proc *Originresnet50Executor) Stop() {
 		proc.cmd.Process.Kill()
 		proc.cmd = nil
 	}
+	runtime.GC()
 }
