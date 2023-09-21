@@ -209,7 +209,7 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 	}()
 
 	// Use a timer to avoid blocking forever
-	timer := time.NewTimer(2 * time.Second)
+	timer := time.NewTimer(10 * time.Second)
 	defer timer.Stop()
 
 	select {
