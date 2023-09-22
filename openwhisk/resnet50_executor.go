@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"runtime"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -33,6 +34,8 @@ type resnet50Executor struct {
 func Newresnet50Executor(logout *os.File, logerr *os.File, command string, env map[string]string, args ...string) (proc *resnet50Executor) {
 	//env:子进程的环境变量; cmd + arg: 真正的命令
 	cmd := exec.Command(command, args...) //创建一个可以用来启动命令的 *Cmd
+	// 创建一个新的进程组
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	//cmd.Stdout = logout
 	//cmd.Stdout = cmd.StdoutPipe()
 	//cmd.Stderr = logerr
@@ -297,6 +300,7 @@ func (proc *resnet50Executor) Stop() {
 			Debug("Failed to release process: %v", err)
 		}
 
+		proc.cmd.Process.Kill()
 		proc.started = false
 		proc.cmd = nil
 	}

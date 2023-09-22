@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"syscall"
 	"time"
 )
 
@@ -31,6 +32,8 @@ type resnet152Executor struct {
 func Newresnet152Executor(logout *os.File, logerr *os.File, command string, env map[string]string, args ...string) (proc *resnet152Executor) {
 	//env:子进程的环境变量; cmd + arg: 真正的命令
 	cmd := exec.Command(command, args...) //创建一个可以用来启动命令的 *Cmd
+	// 创建一个新的进程组
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	//cmd.Stdout = logout
 	//cmd.Stdout = cmd.StdoutPipe()
 	//cmd.Stderr = logerr
@@ -196,23 +199,31 @@ func (proc *resnet152Executor) Stop() {
 	proc.started = false
 	if proc.cmd != nil {
 		// Get the process to kill
-		processToKill, err := os.FindProcess(proc.cmd.Process.Pid + 1)
-		if err != nil {
-			Debug("Failed to find process: %v", err)
-			return
+		//processToKill, err := os.FindProcess(proc.cmd.Process.Pid + 1)
+		//if err != nil {
+		//	Debug("Failed to find process: %v", err)
+		//	return
+		//}
+		//
+		//// Kill the process
+		//if err := processToKill.Kill(); err != nil {
+		//	Debug("Failed to kill process: %v", err)
+		//	return
+		//}
+		//
+		//// Release the process
+		//if err := processToKill.Release(); err != nil {
+		//	Debug("Failed to release process: %v", err)
+		//}
+		pgid, err := syscall.Getpgid(proc.cmd.Process.Pid)
+		if err == nil {
+			syscall.Kill(-pgid, 15) // 注意pgid必须是负数
+		} else {
+			fmt.Printf("获取进程组失败: %v\n", err)
+			os.Exit(1)
 		}
 
-		// Kill the process
-		if err := processToKill.Kill(); err != nil {
-			Debug("Failed to kill process: %v", err)
-			return
-		}
-
-		// Release the process
-		if err := processToKill.Release(); err != nil {
-			Debug("Failed to release process: %v", err)
-		}
-
+		//proc.cmd.Process.Kill()
 		proc.started = false
 		proc.cmd = nil
 	}
