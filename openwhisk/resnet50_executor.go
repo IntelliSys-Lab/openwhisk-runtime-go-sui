@@ -204,7 +204,7 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		reader := bufio.NewReader(proc.output)
 		line, _, err := reader.ReadLine()
 		if err != nil {
-			Debug("Meet Error while Interacting!:")
+			Debug("Res50 Meet Error while Interacting!:")
 			Debug(err.Error())
 			fmt.Errorf("meet error when scanning output: %w", err)
 			return
@@ -212,7 +212,7 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 		chout <- line
 	}()
 
-	timer := time.NewTimer(10 * time.Second)
+	timer := time.NewTimer(15 * time.Second)
 
 	select {
 	case out := <-chout:
@@ -220,13 +220,13 @@ func (proc *resnet50Executor) Interact(in []byte) ([]byte, error) {
 			<-timer.C
 		}
 		if len(out) == 0 {
-			return nil, errors.New("no answer from the action")
+			return nil, errors.New("no answer from the Res50 action")
 		}
 		proc.started = false
 		return out, nil
 	case <-timer.C:
 		proc.started = false
-		return nil, errors.New("operation timed out")
+		return nil, errors.New("Res50 operation timed out")
 	}
 }
 

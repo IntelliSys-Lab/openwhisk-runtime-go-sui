@@ -82,11 +82,15 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet50Executor.started == true {
+		if ap.theresnet50Executor.started {
 			ap.theresnet50Executor.Stop()
+			ap.theresnet50Executor = nil
+			ap.theOriginresnet50Executor = nil
 		}
-		if ap.theresnet152Executor.started == true {
+		if ap.theresnet152Executor.started {
 			ap.theresnet152Executor.Stop()
+			ap.theresnet152Executor = nil
+			ap.theOriginresnet152Executor = nil
 		}
 
 		// remove newlines
@@ -176,12 +180,12 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet18Executor.started == true {
+		if ap.theresnet18Executor.started {
 			ap.theresnet18Executor.Stop()
 			ap.theresnet18Executor = nil
 			ap.theOriginresnet18Executor = nil
 		}
-		if ap.theresnet152Executor.started == true {
+		if ap.theresnet152Executor.started {
 			ap.theresnet152Executor.Stop()
 			ap.theresnet152Executor = nil
 			ap.theOriginresnet152Executor = nil
@@ -226,11 +230,11 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		if ap.theresnet50Executor == nil {
-			Debug("yes, executor is nil")
-			NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
-			ap.theresnet50Executor = NEWresnet50Executor1
-		}
+		//if ap.theresnet50Executor == nil {
+		//	Debug("yes, res50executor is nil")
+		//	NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+		//	ap.theresnet50Executor = NEWresnet50Executor1
+		//}
 
 		////重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
 		//NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
@@ -277,11 +281,15 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet18Executor.started == true {
+		if ap.theresnet18Executor.started {
 			ap.theresnet18Executor.Stop()
+			ap.theresnet18Executor = nil
+			ap.theOriginresnet18Executor = nil
 		}
-		if ap.theresnet50Executor.started == true {
+		if ap.theresnet50Executor.started {
 			ap.theresnet50Executor.Stop()
+			ap.theresnet50Executor = nil
+			ap.theOriginresnet50Executor = nil
 		}
 
 		Debug("Served By LoadRunHandler152")

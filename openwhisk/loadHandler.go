@@ -51,10 +51,11 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		Debug("LoadHandler starts pre-loading ResNet18.")
 		// check if you have an action
 		if ap.theresnet18Executor == nil {
-			Debug("no 18 action defined yet (load)")
-			return
+			Debug("Just create a new res18executor")
+			NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
+			ap.theresnet18Executor = NEWresnet18Executor1
 		}
-		if ap.theresnet18Executor.started == true {
+		if ap.theresnet18Executor.started {
 			Debug("already loaded resnet18")
 			return
 		}
@@ -78,10 +79,11 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		Debug("LoadHandler starts pre-loading ResNet50.")
 		// check if you have an action
 		if ap.theresnet50Executor == nil {
-			Debug("no 50 action defined yet (load)")
-			return
+			Debug("Just create a new res50executor")
+			NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
+			ap.theresnet50Executor = NEWresnet50Executor1
 		}
-		if ap.theresnet50Executor.started == true {
+		if ap.theresnet50Executor.started {
 			Debug("already loaded resnet50")
 			return
 		}
@@ -105,11 +107,12 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 		Debug("LoadHandler starts pre-loading ResNet152.")
 		// check if you have an action
 		if ap.theresnet152Executor == nil {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (load)"))
-			return
+			Debug("Just create a new res152executor")
+			NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+			ap.theresnet152Executor = NEWresnet152Executor1
 		}
-		if ap.theresnet152Executor.started == true {
-			sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet152"))
+		if ap.theresnet152Executor.started {
+			Debug("already loaded resnet152")
 			return
 		}
 

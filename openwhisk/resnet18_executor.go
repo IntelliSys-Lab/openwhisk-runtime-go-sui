@@ -2,7 +2,6 @@ package openwhisk
 
 import (
 	"bufio"
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,7 +9,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"sync"
 	"time"
 )
 
@@ -150,33 +148,35 @@ func (proc *resnet18Executor) Interact(in []byte) ([]byte, error) {
 		return nil, fmt.Errorf("failed to write newline to stdin: %w", err)
 	}
 
-	var outputBuffer bytes.Buffer
 	chout := make(chan []byte)
-	var wg sync.WaitGroup
 
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
-		_, err := io.Copy(&outputBuffer, proc.output)
+		reader := bufio.NewReader(proc.output)
+		line, _, err := reader.ReadLine()
 		if err != nil {
-			// Handle error, maybe log it or send it somewhere else.
-			Debug("Meet Error while Interacting!:")
+			Debug("Res18 Meet Error while Interacting!:")
 			Debug(err.Error())
-			fmt.Errorf("meet error when copy output: %w", err)
+			fmt.Errorf("meet error when scanning output: %w", err)
+			return
 		}
-		chout <- outputBuffer.Bytes()
+		chout <- line
 	}()
+
+	timer := time.NewTimer(15 * time.Second)
 
 	select {
 	case out := <-chout:
+		if !timer.Stop() {
+			<-timer.C
+		}
 		if len(out) == 0 {
-			return nil, errors.New("no answer from the action")
+			return nil, errors.New("no answer from the Res18 action")
 		}
 		proc.started = false
 		return out, nil
-	case <-proc.exited:
+	case <-timer.C:
 		proc.started = false
-		return nil, errors.New("command exited!!!!!!!!")
+		return nil, errors.New("Res18 operation timed out")
 	}
 }
 
