@@ -211,7 +211,7 @@ func (proc *resnet18Executor) Stop() {
 		//}
 		pgid, err := syscall.Getpgid(proc.cmd.Process.Pid)
 		if err == nil {
-			syscall.Kill(-pgid, 15) // 注意pgid必须是负数
+			syscall.Kill(-pgid, 9) // 注意pgid必须是负数 “9”表示SIGKILL信号
 		} else {
 			fmt.Printf("获取进程组失败: %v\n", err)
 			os.Exit(1)
