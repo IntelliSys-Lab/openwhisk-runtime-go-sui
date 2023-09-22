@@ -282,25 +282,33 @@ func (proc *resnet50Executor) Stop() {
 
 	proc.started = false
 	if proc.cmd != nil {
-		// Get the process to kill
-		processToKill, err := os.FindProcess(proc.cmd.Process.Pid + 1)
-		if err != nil {
-			Debug("Failed to find process: %v", err)
-			return
+		//// Get the process to kill
+		//processToKill, err := os.FindProcess(proc.cmd.Process.Pid + 1)
+		//if err != nil {
+		//	Debug("Failed to find process: %v", err)
+		//	return
+		//}
+		//
+		//// Kill the process
+		//if err := processToKill.Kill(); err != nil {
+		//	Debug("Failed to kill process: %v", err)
+		//	return
+		//}
+		//
+		//// Release the process
+		//if err := processToKill.Release(); err != nil {
+		//	Debug("Failed to release process: %v", err)
+		//}
+		//proc.cmd.Process.Kill()
+
+		pgid, err := syscall.Getpgid(proc.cmd.Process.Pid)
+		if err == nil {
+			syscall.Kill(-pgid, 9) // 注意pgid必须是负数 “9”表示SIGKILL信号
+		} else {
+			fmt.Printf("获取进程组失败: %v\n", err)
+			os.Exit(1)
 		}
 
-		// Kill the process
-		if err := processToKill.Kill(); err != nil {
-			Debug("Failed to kill process: %v", err)
-			return
-		}
-
-		// Release the process
-		if err := processToKill.Release(); err != nil {
-			Debug("Failed to release process: %v", err)
-		}
-
-		proc.cmd.Process.Kill()
 		proc.started = false
 		proc.cmd = nil
 	}
