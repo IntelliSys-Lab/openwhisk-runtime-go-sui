@@ -50,7 +50,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.Contains(actionName, "ptest04") {
 		Debug("LoadHandler starts pre-loading ResNet18.")
 		// check if you have an action
-		if ap.theresnet18Executor == nil {
+		if ap.theresnet18Executor == nil || ap.theresnet18Executor.cmd == nil {
 			Debug("Just create a new res18executor")
 			NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
 			ap.theresnet18Executor = NEWresnet18Executor1
@@ -78,7 +78,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 	} else if strings.Contains(actionName, "ptest05") {
 		Debug("LoadHandler starts pre-loading ResNet50.")
 		// check if you have an action
-		if ap.theresnet50Executor == nil {
+		if ap.theresnet50Executor == nil || ap.theresnet50Executor.cmd == nil {
 			Debug("Just create a new res50executor")
 			NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 			ap.theresnet50Executor = NEWresnet50Executor1
@@ -106,7 +106,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 	} else if strings.Contains(actionName, "ptest06") {
 		Debug("LoadHandler starts pre-loading ResNet152.")
 		// check if you have an action
-		if ap.theresnet152Executor == nil {
+		if ap.theresnet152Executor == nil || ap.theresnet152Executor.cmd == nil {
 			Debug("Just create a new res152executor")
 			NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 			ap.theresnet152Executor = NEWresnet152Executor1
