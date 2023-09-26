@@ -82,15 +82,19 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet50Executor.started {
-			ap.theresnet50Executor.Stop()
-			ap.theresnet50Executor = nil
-			ap.theOriginresnet50Executor = nil
+		if ap.theresnet50Executor != nil {
+			if ap.theresnet50Executor.started {
+				ap.theresnet50Executor.Stop()
+				ap.theresnet50Executor = nil
+				ap.theOriginresnet50Executor = nil
+			}
 		}
-		if ap.theresnet152Executor.started {
-			ap.theresnet152Executor.Stop()
-			ap.theresnet152Executor = nil
-			ap.theOriginresnet152Executor = nil
+		if ap.theresnet152Executor != nil {
+			if ap.theresnet152Executor.started {
+				ap.theresnet152Executor.Stop()
+				ap.theresnet152Executor = nil
+				ap.theOriginresnet152Executor = nil
+			}
 		}
 
 		// remove newlines
@@ -180,15 +184,19 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet18Executor.started {
-			ap.theresnet18Executor.Stop()
-			ap.theresnet18Executor = nil
-			ap.theOriginresnet18Executor = nil
+		if ap.theresnet18Executor != nil {
+			if ap.theresnet18Executor.started {
+				ap.theresnet18Executor.Stop()
+				ap.theresnet18Executor = nil
+				ap.theOriginresnet18Executor = nil
+			}
 		}
-		if ap.theresnet152Executor.started {
-			ap.theresnet152Executor.Stop()
-			ap.theresnet152Executor = nil
-			ap.theOriginresnet152Executor = nil
+		if ap.theresnet152Executor != nil {
+			if ap.theresnet152Executor.started {
+				ap.theresnet152Executor.Stop()
+				ap.theresnet152Executor = nil
+				ap.theOriginresnet152Executor = nil
+			}
 		}
 
 		Debug("Served By LoadRunHandler50")
@@ -281,15 +289,19 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet18Executor.started {
-			ap.theresnet18Executor.Stop()
-			ap.theresnet18Executor = nil
-			ap.theOriginresnet18Executor = nil
+		if ap.theresnet18Executor != nil {
+			if ap.theresnet18Executor.started {
+				ap.theresnet18Executor.Stop()
+				ap.theresnet18Executor = nil
+				ap.theOriginresnet18Executor = nil
+			}
 		}
-		if ap.theresnet50Executor.started {
-			ap.theresnet50Executor.Stop()
-			ap.theresnet50Executor = nil
-			ap.theOriginresnet50Executor = nil
+		if ap.theresnet50Executor != nil {
+			if ap.theresnet50Executor.started {
+				ap.theresnet50Executor.Stop()
+				ap.theresnet50Executor = nil
+				ap.theOriginresnet50Executor = nil
+			}
 		}
 
 		Debug("Served By LoadRunHandler152")
