@@ -183,7 +183,7 @@ func (proc *resnet152Executor) Interact(in []byte) ([]byte, error) {
 		if len(out) == 0 {
 			return nil, errors.New("no answer from the Res152 action")
 		}
-		proc.started = false
+		//proc.started = false
 		return out, nil
 	case <-timer.C:
 		proc.started = false
@@ -224,7 +224,7 @@ func (proc *resnet152Executor) Stop() {
 			fmt.Printf("获取进程组失败: %v\n", err)
 			os.Exit(1)
 		}
-		
+
 		proc.started = false
 		proc.cmd = nil
 	}
