@@ -177,7 +177,7 @@ func (proc *bertExecutor) Interact(in []byte) ([]byte, error) {
 		if len(out) == 0 {
 			return nil, errors.New("no answer from the Res18 action")
 		}
-		proc.started = false
+		//proc.started = false
 		return out, nil
 	case <-timer.C:
 		proc.started = false
