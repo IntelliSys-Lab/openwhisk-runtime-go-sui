@@ -103,6 +103,36 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		NEWOriginresnet152Executor := NewOriginresnet152Executor(ap.outFile, ap.errFile, "_test/func152.sh", ap.env)
 		ap.theOriginresnet152Executor = NEWOriginresnet152Executor
 
+	} else if strings.Contains(actionName, "ptest01") && (ap.thealexExecutor.started == false) {
+		Debug("has created alexexecutor")
+		response, err = ap.theOriginalexExecutor.StartAndWaitForOutput()
+		//重建新的executor
+		NEWOriginalexExecutor := NewOriginalexExecutor(ap.outFile, ap.errFile, "_test/funcalex.sh", ap.env)
+		ap.theOriginalexExecutor = NEWOriginalexExecutor
+	} else if strings.Contains(actionName, "ptest02") && (ap.thevggExecutor.started == false) {
+		Debug("has created vggexecutor")
+		response, err = ap.theOriginvggExecutor.StartAndWaitForOutput()
+		//重建新的executor
+		NEWOriginvggExecutor := NewOriginvggExecutor(ap.outFile, ap.errFile, "_test/funcvgg.sh", ap.env)
+		ap.theOriginvggExecutor = NEWOriginvggExecutor
+	} else if strings.Contains(actionName, "ptest03") && (ap.theinceptionExecutor.started == false) {
+		Debug("has created inceptionexecutor")
+		response, err = ap.theOrigininceptionExecutor.StartAndWaitForOutput()
+		//重建新的executor
+		NEWOrigininceptionExecutor := NewOrigininceptionExecutor(ap.outFile, ap.errFile, "_test/funcinception.sh", ap.env)
+		ap.theOrigininceptionExecutor = NEWOrigininceptionExecutor
+	} else if strings.Contains(actionName, "ptest07") && (ap.thegooglenetExecutor.started == false) {
+		Debug("has created googlenetexecutor")
+		response, err = ap.theOrigingooglenetExecutor.StartAndWaitForOutput()
+		//重建新的executor
+		NEWOrigingooglenetExecutor := NewOrigingooglenetExecutor(ap.outFile, ap.errFile, "_test/funcgooglenet.sh", ap.env)
+		ap.theOrigingooglenetExecutor = NEWOrigingooglenetExecutor
+	} else if strings.Contains(actionName, "ptest08") && (ap.thebertExecutor.started == false) {
+		Debug("has created bertexecutor")
+		response, err = ap.theOriginbertExecutor.StartAndWaitForOutput()
+		//重建新的executor
+		NEWOriginbertExecutor := NewOriginbertExecutor(ap.outFile, ap.errFile, "_test/funcbert.sh", ap.env)
+		ap.theOriginbertExecutor = NEWOriginbertExecutor
 	} else {
 		// check if you have an action
 		if ap.theExecutor == nil {

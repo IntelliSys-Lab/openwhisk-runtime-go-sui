@@ -48,12 +48,24 @@ type ActionProxy struct {
 	theExecutor *Executor
 
 	// theChannel is the channel communicating with the action
-	theresnet18Executor        *resnet18Executor
-	theresnet50Executor        *resnet50Executor
-	theresnet152Executor       *resnet152Executor
+
+	thealexExecutor      *alexExecutor
+	thevggExecutor       *vggExecutor
+	theinceptionExecutor *inceptionExecutor
+	theresnet18Executor  *resnet18Executor
+	theresnet50Executor  *resnet50Executor
+	theresnet152Executor *resnet152Executor
+	thegooglenetExecutor *googlenetExecutor
+	thebertExecutor      *bertExecutor
+
+	theOriginalexExecutor      *OriginalexExecutor
+	theOriginvggExecutor       *OriginvggExecutor
+	theOrigininceptionExecutor *OrigininceptionExecutor
 	theOriginresnet18Executor  *Originresnet18Executor
 	theOriginresnet50Executor  *Originresnet50Executor
 	theOriginresnet152Executor *Originresnet152Executor
+	theOrigingooglenetExecutor *OrigingooglenetExecutor
+	theOriginbertExecutor      *OriginbertExecutor
 
 	// out and err files
 	outFile *os.File
@@ -71,6 +83,16 @@ func NewActionProxy(baseDir string, compiler string, outFile *os.File, errFile *
 		baseDir,
 		compiler,
 		highestDir(baseDir),
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
 		nil,
 		nil,
 		nil,
@@ -156,9 +178,24 @@ func (ap *ActionProxy) StartLatestAction() error {
 	}
 
 	//为每个model的function都创建一个executor：
+	NEWalexExecutor := NewalexExecutor(ap.outFile, ap.errFile, "_test/loadalex.sh", ap.env)
+	NEWvggExecutor := NewvggExecutor(ap.outFile, ap.errFile, "_test/loadvgg.sh", ap.env)
+	NEWinceptionExecutor := NewinceptionExecutor(ap.outFile, ap.errFile, "_test/loadinception.sh", ap.env)
 	NEWresnet18Executor := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
 	NEWresnet50Executor := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 	NEWresnet152Executor := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
+	NEWgooglenetExecutor := NewgooglenetExecutor(ap.outFile, ap.errFile, "_test/loadgooglenet.sh", ap.env)
+	NEWbertExecutor := NewbertExecutor(ap.outFile, ap.errFile, "_test/loadbert.sh", ap.env)
+
+	if ap.thealexExecutor == nil {
+		ap.thealexExecutor = NEWalexExecutor
+	}
+	if ap.thevggExecutor == nil {
+		ap.thevggExecutor = NEWvggExecutor
+	}
+	if ap.theinceptionExecutor == nil {
+		ap.theinceptionExecutor = NEWinceptionExecutor
+	}
 	if ap.theresnet18Executor == nil {
 		ap.theresnet18Executor = NEWresnet18Executor
 	}
@@ -168,6 +205,21 @@ func (ap *ActionProxy) StartLatestAction() error {
 	if ap.theresnet152Executor == nil {
 		ap.theresnet152Executor = NEWresnet152Executor
 	}
+	if ap.thegooglenetExecutor == nil {
+		ap.thegooglenetExecutor = NEWgooglenetExecutor
+	}
+	if ap.thebertExecutor == nil {
+		ap.thebertExecutor = NEWbertExecutor
+	}
+
+	NEWOriginalexExecutor := NewOriginalexExecutor(ap.outFile, ap.errFile, "_test/funcalex.sh", ap.env)
+	ap.theOriginalexExecutor = NEWOriginalexExecutor
+
+	NEWOriginvggExecutor := NewOriginvggExecutor(ap.outFile, ap.errFile, "_test/funcvgg.sh", ap.env)
+	ap.theOriginvggExecutor = NEWOriginvggExecutor
+
+	NEWOrigininceptionExecutor := NewOrigininceptionExecutor(ap.outFile, ap.errFile, "_test/funcinception.sh", ap.env)
+	ap.theOrigininceptionExecutor = NEWOrigininceptionExecutor
 
 	NEWOriginresnet18Executor := NewOriginresnet18Executor(ap.outFile, ap.errFile, "_test/func18.sh", ap.env)
 	ap.theOriginresnet18Executor = NEWOriginresnet18Executor
@@ -178,50 +230,11 @@ func (ap *ActionProxy) StartLatestAction() error {
 	NEWOriginresnet152Executor := NewOriginresnet152Executor(ap.outFile, ap.errFile, "_test/func152.sh", ap.env)
 	ap.theOriginresnet152Executor = NEWOriginresnet152Executor
 
-	//// Save the current executors
-	//curResnet18Executor := ap.theresnet18Executor
-	//curResnet50Executor := ap.theresnet50Executor
-	//curResnet152Executor := ap.theresnet152Executor
-	//
-	//// Try to launch the new executors
-	//NEWresnet18Executor := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-	//NEWresnet50Executor := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
-	//NEWresnet152Executor := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-	//
-	//// Start the new executors
-	//err18 := NEWresnet18Executor.Start(os.Getenv("OW_WAIT_FOR_ACK") != "")
-	//err50 := NEWresnet50Executor.Start(os.Getenv("OW_WAIT_FOR_ACK") != "")
-	//err152 := NEWresnet152Executor.Start(os.Getenv("OW_WAIT_FOR_ACK") != "")
-	//
-	//if err18 == nil {
-	//	ap.theresnet18Executor = NEWresnet18Executor
-	//	if curResnet18Executor != nil {
-	//		Debug("stopping old resnet18 executor")
-	//		curResnet18Executor.Stop()
-	//	}
-	//} else {
-	//	// Handle the error
-	//}
-	//
-	//if err50 == nil {
-	//	ap.theresnet50Executor = NEWresnet50Executor
-	//	if curResnet50Executor != nil {
-	//		Debug("stopping old resnet50 executor")
-	//		curResnet50Executor.Stop()
-	//	}
-	//} else {
-	//	// Handle the error
-	//}
-	//
-	//if err152 == nil {
-	//	ap.theresnet152Executor = NEWresnet152Executor
-	//	if curResnet152Executor != nil {
-	//		Debug("stopping old resnet152 executor")
-	//		curResnet152Executor.Stop()
-	//	}
-	//} else {
-	//	// Handle the error
-	//}
+	NEWOrigingooglenetExecutor := NewOrigingooglenetExecutor(ap.outFile, ap.errFile, "_test/funcgooglenet.sh", ap.env)
+	ap.theOrigingooglenetExecutor = NEWOrigingooglenetExecutor
+
+	NEWOriginbertExecutor := NewOriginbertExecutor(ap.outFile, ap.errFile, "_test/funcbert.sh", ap.env)
+	ap.theOriginbertExecutor = NEWOriginbertExecutor
 
 	// save the current executor  将ActionProxy结构体中的成员theExecutor的值赋给curExecutor
 	curExecutor := ap.theExecutor
@@ -318,5 +331,40 @@ func (ap *ActionProxy) ExtractAndCompileIO(r io.Reader, w io.Writer, main string
 	_, err = w.Write(zip)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func (ap *ActionProxy) StopAllExecutorsExcept(name string) {
+	if name != "alex" && ap.thealexExecutor != nil && ap.thealexExecutor.started {
+		ap.thealexExecutor.Stop()
+		ap.thealexExecutor = nil
+	}
+	if name != "vgg" && ap.thevggExecutor != nil && ap.thevggExecutor.started {
+		ap.thevggExecutor.Stop()
+		ap.thevggExecutor = nil
+	}
+	if name != "inception" && ap.theinceptionExecutor != nil && ap.theinceptionExecutor.started {
+		ap.theinceptionExecutor.Stop()
+		ap.theinceptionExecutor = nil
+	}
+	if name != "resnet18" && ap.theresnet18Executor != nil && ap.theresnet18Executor.started {
+		ap.theresnet18Executor.Stop()
+		ap.theresnet18Executor = nil
+	}
+	if name != "resnet50" && ap.theresnet50Executor != nil && ap.theresnet50Executor.started {
+		ap.theresnet50Executor.Stop()
+		ap.theresnet50Executor = nil
+	}
+	if name != "resnet152" && ap.theresnet152Executor != nil && ap.theresnet152Executor.started {
+		ap.theresnet152Executor.Stop()
+		ap.theresnet152Executor = nil
+	}
+	if name != "googlenet" && ap.thegooglenetExecutor != nil && ap.thegooglenetExecutor.started {
+		ap.thegooglenetExecutor.Stop()
+		ap.thegooglenetExecutor = nil
+	}
+	if name != "bert" && ap.thebertExecutor != nil && ap.thebertExecutor.started {
+		ap.thebertExecutor.Stop()
+		ap.thebertExecutor = nil
 	}
 }

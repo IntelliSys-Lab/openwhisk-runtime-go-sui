@@ -82,20 +82,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet50Executor != nil {
-			if ap.theresnet50Executor.started {
-				ap.theresnet50Executor.Stop()
-				ap.theresnet50Executor = nil
-				ap.theOriginresnet50Executor = nil
-			}
-		}
-		if ap.theresnet152Executor != nil {
-			if ap.theresnet152Executor.started {
-				ap.theresnet152Executor.Stop()
-				ap.theresnet152Executor = nil
-				ap.theOriginresnet152Executor = nil
-			}
-		}
+		ap.StopAllExecutorsExcept("resnet18")
 
 		// remove newlines
 		Debug("Served By LoadRunHandler18")
@@ -133,29 +120,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		//if ap.theresnet18Executor == nil {
-		//	NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-		//	ap.theresnet18Executor = NEWresnet18Executor1
-		//}
-		//
-		//if ap.theresnet18Executor.started == true {
-		//	sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet18"))
-		//}
-		//
-		////重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		//NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-		//ap.theresnet18Executor = NEWresnet18Executor1
-		//
-		//err2 := ap.theresnet18Executor.Start(false)
-		//if err2 != nil {
-		//	Debug("WARNING! Command exited?")
-		//	//ap.theresnet18Executor = nil
-		//	Debug(err.Error())
-		//	sendError(w, http.StatusBadRequest, fmt.Sprintf("Res18 command exited！！"))
-		//	sendError(w, http.StatusBadRequest, fmt.Sprintf(err2.Error()))
-		//
-		//}
-
 		// diagnostic when you have writing problems
 		if err != nil {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
@@ -184,20 +148,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet18Executor != nil {
-			if ap.theresnet18Executor.started {
-				ap.theresnet18Executor.Stop()
-				ap.theresnet18Executor = nil
-				ap.theOriginresnet18Executor = nil
-			}
-		}
-		if ap.theresnet152Executor != nil {
-			if ap.theresnet152Executor.started {
-				ap.theresnet152Executor.Stop()
-				ap.theresnet152Executor = nil
-				ap.theOriginresnet152Executor = nil
-			}
-		}
+		ap.StopAllExecutorsExcept("resnet50")
 
 		Debug("Served By LoadRunHandler50")
 
@@ -238,29 +189,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		//if ap.theresnet50Executor == nil {
-		//	Debug("yes, res50executor is nil")
-		//	NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
-		//	ap.theresnet50Executor = NEWresnet50Executor1
-		//}
-
-		////重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		//NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
-		//ap.theresnet50Executor = NEWresnet50Executor1
-		//
-		//if ap.theresnet50Executor.started == true {
-		//	sendError(w, http.StatusInternalServerError, fmt.Sprintf("already loaded resnet50"))
-		//}
-		//
-		//err2 := ap.theresnet50Executor.Start(false)
-		//if err2 != nil {
-		//	Debug("WARNING! Command exited?")
-		//	//ap.theresnet18Executor = nil
-		//	//sendError(w, http.StatusBadRequest, fmt.Sprintf("Res50 command exited！！"))
-		//	//sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
-		//	Debug(err.Error())
-		//}
-
 		// diagnostic when you have writing problems
 		if err != nil {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
@@ -289,20 +217,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//停止其他model的进程
-		if ap.theresnet18Executor != nil {
-			if ap.theresnet18Executor.started {
-				ap.theresnet18Executor.Stop()
-				ap.theresnet18Executor = nil
-				ap.theOriginresnet18Executor = nil
-			}
-		}
-		if ap.theresnet50Executor != nil {
-			if ap.theresnet50Executor.started {
-				ap.theresnet50Executor.Stop()
-				ap.theresnet50Executor = nil
-				ap.theOriginresnet50Executor = nil
-			}
-		}
+		ap.StopAllExecutorsExcept("resnet152")
 
 		Debug("Served By LoadRunHandler152")
 
@@ -341,27 +256,340 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			f.Flush()
 		}
 
-		//if ap.theresnet152Executor == nil {
-		//	//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
-		//	NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-		//	ap.theresnet152Executor = NEWresnet152Executor1
-		//}
-		//
-		//if ap.theresnet152Executor.started == true {
-		//	Debug("already loaded resnet152")
-		//}
-		//
-		////重新Start（由于executor的cmd不能反复用于多次load + run，因此，每当执行完后，消除旧的executor，重建新的。
-		//NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
-		//ap.theresnet152Executor = NEWresnet152Executor1
-		//
-		//err2 := ap.theresnet152Executor.Start(false)
-		//if err2 != nil {
-		//	Debug("WARNING! Command exited>")
-		//	//ap.theresnet18Executor = nil
-		//	sendError(w, http.StatusBadRequest, fmt.Sprintf("Res152 command exited！！"))
-		//	sendError(w, http.StatusBadRequest, fmt.Sprintf(err2.Error()))
-		//}
+		// diagnostic when you have writing problems
+		if err != nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
+			return
+		}
+		if numBytesWritten != len(response) {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
+			return
+		}
+	} else if strings.Contains(actionName, "ptest06") {
+		// actionName contains "ptest"
+		Debug("LoadRunHandler done reading %d bytes", len(body))
+
+		// check if you have an action
+		if ap.thealexExecutor == nil || ap.thealexExecutor.cmd == nil {
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			NEWalexExecutor1 := NewalexExecutor(ap.outFile, ap.errFile, "_test/loadalex.sh", ap.env)
+			ap.thealexExecutor = NEWalexExecutor1
+			ap.runHandler(w, r)
+			return
+		}
+		if ap.thealexExecutor.started == false {
+			Debug("Haven't pre-loaded alex")
+			ap.runHandler(w, r)
+			return
+		}
+
+		//停止其他model的进程
+		ap.StopAllExecutorsExcept("alex")
+
+		Debug("Served By LoadRunHandlerXX")
+
+		// remove newlines
+		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
+
+		// execute the action
+		response, err := ap.thealexExecutor.Interact(body)
+
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited?")
+			ap.thealexExecutor = nil
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("alex command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			return
+		}
+		DebugLimit("received:", response, 120)
+
+		// check if the answer is an object map
+		var objmap map[string]*json.RawMessage
+		resStr := strings.ReplaceAll(string(response), "'", "\"")
+		response = []byte(resStr)
+		err = json.Unmarshal(response, &objmap)
+		if err != nil {
+			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(response)))
+		numBytesWritten, err := w.Write(response)
+
+		// flush output
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+
+		// diagnostic when you have writing problems
+		if err != nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
+			return
+		}
+		if numBytesWritten != len(response) {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
+			return
+		}
+	} else if strings.Contains(actionName, "ptest06") {
+		// actionName contains "ptest"
+		Debug("LoadRunHandler done reading %d bytes", len(body))
+
+		// check if you have an action
+		if ap.thevggExecutor == nil || ap.thevggExecutor.cmd == nil {
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			NEWvggExecutor1 := NewvggExecutor(ap.outFile, ap.errFile, "_test/loadvgg.sh", ap.env)
+			ap.thevggExecutor = NEWvggExecutor1
+			ap.runHandler(w, r)
+			return
+		}
+		if ap.thevggExecutor.started == false {
+			Debug("Haven't pre-loaded vgg")
+			ap.runHandler(w, r)
+			return
+		}
+
+		//停止其他model的进程
+		ap.StopAllExecutorsExcept("vgg")
+
+		Debug("Served By LoadRunHandlerXX")
+
+		// remove newlines
+		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
+
+		// execute the action
+		response, err := ap.thevggExecutor.Interact(body)
+
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited?")
+			ap.thevggExecutor = nil
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("vgg command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			return
+		}
+		DebugLimit("received:", response, 120)
+
+		// check if the answer is an object map
+		var objmap map[string]*json.RawMessage
+		resStr := strings.ReplaceAll(string(response), "'", "\"")
+		response = []byte(resStr)
+		err = json.Unmarshal(response, &objmap)
+		if err != nil {
+			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(response)))
+		numBytesWritten, err := w.Write(response)
+
+		// flush output
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+
+		// diagnostic when you have writing problems
+		if err != nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
+			return
+		}
+		if numBytesWritten != len(response) {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
+			return
+		}
+	} else if strings.Contains(actionName, "ptest06") {
+		// actionName contains "ptest"
+		Debug("LoadRunHandler done reading %d bytes", len(body))
+
+		// check if you have an action
+		if ap.theinceptionExecutor == nil || ap.theinceptionExecutor.cmd == nil {
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			NEWinceptionExecutor1 := NewinceptionExecutor(ap.outFile, ap.errFile, "_test/loadinception.sh", ap.env)
+			ap.theinceptionExecutor = NEWinceptionExecutor1
+			ap.runHandler(w, r)
+			return
+		}
+		if ap.theinceptionExecutor.started == false {
+			Debug("Haven't pre-loaded inception")
+			ap.runHandler(w, r)
+			return
+		}
+
+		//停止其他model的进程
+		ap.StopAllExecutorsExcept("inception")
+
+		Debug("Served By LoadRunHandlerXX")
+
+		// remove newlines
+		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
+
+		// execute the action
+		response, err := ap.theinceptionExecutor.Interact(body)
+
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited?")
+			ap.theinceptionExecutor = nil
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("inception command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			return
+		}
+		DebugLimit("received:", response, 120)
+
+		// check if the answer is an object map
+		var objmap map[string]*json.RawMessage
+		resStr := strings.ReplaceAll(string(response), "'", "\"")
+		response = []byte(resStr)
+		err = json.Unmarshal(response, &objmap)
+		if err != nil {
+			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(response)))
+		numBytesWritten, err := w.Write(response)
+
+		// flush output
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+
+		// diagnostic when you have writing problems
+		if err != nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
+			return
+		}
+		if numBytesWritten != len(response) {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
+			return
+		}
+	} else if strings.Contains(actionName, "ptest06") {
+		// actionName contains "ptest"
+		Debug("LoadRunHandler done reading %d bytes", len(body))
+
+		// check if you have an action
+		if ap.thegooglenetExecutor == nil || ap.thegooglenetExecutor.cmd == nil {
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			NEWgooglenetExecutor1 := NewgooglenetExecutor(ap.outFile, ap.errFile, "_test/loadgooglenet.sh", ap.env)
+			ap.thegooglenetExecutor = NEWgooglenetExecutor1
+			ap.runHandler(w, r)
+			return
+		}
+		if ap.thegooglenetExecutor.started == false {
+			Debug("Haven't pre-loaded googlenet")
+			ap.runHandler(w, r)
+			return
+		}
+
+		//停止其他model的进程
+		ap.StopAllExecutorsExcept("googlenet")
+
+		Debug("Served By LoadRunHandlerXX")
+
+		// remove newlines
+		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
+
+		// execute the action
+		response, err := ap.thegooglenetExecutor.Interact(body)
+
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited?")
+			ap.thegooglenetExecutor = nil
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("googlenet command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			return
+		}
+		DebugLimit("received:", response, 120)
+
+		// check if the answer is an object map
+		var objmap map[string]*json.RawMessage
+		resStr := strings.ReplaceAll(string(response), "'", "\"")
+		response = []byte(resStr)
+		err = json.Unmarshal(response, &objmap)
+		if err != nil {
+			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(response)))
+		numBytesWritten, err := w.Write(response)
+
+		// flush output
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+
+		// diagnostic when you have writing problems
+		if err != nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Error writing response: %v", err))
+			return
+		}
+		if numBytesWritten != len(response) {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
+			return
+		}
+	} else if strings.Contains(actionName, "ptest06") {
+		// actionName contains "ptest"
+		Debug("LoadRunHandler done reading %d bytes", len(body))
+
+		// check if you have an action
+		if ap.thebertExecutor == nil || ap.thebertExecutor.cmd == nil {
+			//sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet (new)"))
+			NEWbertExecutor1 := NewbertExecutor(ap.outFile, ap.errFile, "_test/loadbert.sh", ap.env)
+			ap.thebertExecutor = NEWbertExecutor1
+			ap.runHandler(w, r)
+			return
+		}
+		if ap.thebertExecutor.started == false {
+			Debug("Haven't pre-loaded bert")
+			ap.runHandler(w, r)
+			return
+		}
+
+		//停止其他model的进程
+		ap.StopAllExecutorsExcept("bert")
+
+		Debug("Served By LoadRunHandlerXX")
+
+		// remove newlines
+		body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
+
+		// execute the action
+		response, err := ap.thebertExecutor.Interact(body)
+
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited?")
+			ap.thebertExecutor = nil
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("bert command exited"))
+			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
+			return
+		}
+		DebugLimit("received:", response, 120)
+
+		// check if the answer is an object map
+		var objmap map[string]*json.RawMessage
+		resStr := strings.ReplaceAll(string(response), "'", "\"")
+		response = []byte(resStr)
+		err = json.Unmarshal(response, &objmap)
+		if err != nil {
+			sendError(w, http.StatusBadGateway, "The action did not return a dictionary.")
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(response)))
+		numBytesWritten, err := w.Write(response)
+
+		// flush output
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
 
 		// diagnostic when you have writing problems
 		if err != nil {

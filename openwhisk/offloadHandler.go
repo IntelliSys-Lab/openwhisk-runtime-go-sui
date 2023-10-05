@@ -87,6 +87,71 @@ func (ap *ActionProxy) offloadHandler(w http.ResponseWriter, r *http.Request) {
 			Debug("received a offload signal, now stopping resnet152")
 			ap.theresnet152Executor.Stop()
 		}
+	} else if strings.Contains(actionName, "ptest01") {
+		// check if you have an action
+		if ap.thealexExecutor == nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
+			return
+		}
+		if ap.thealexExecutor.started == false {
+			return
+		}
+		if ap.thealexExecutor.started == true {
+			Debug("received a offload signal, now stopping alex")
+			ap.thealexExecutor.Stop()
+		}
+	} else if strings.Contains(actionName, "ptest02") {
+		// check if you have an action
+		if ap.thevggExecutor == nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
+			return
+		}
+		if ap.thevggExecutor.started == false {
+			return
+		}
+		if ap.thevggExecutor.started == true {
+			Debug("received a offload signal, now stopping vgg")
+			ap.thevggExecutor.Stop()
+		}
+	} else if strings.Contains(actionName, "ptest03") {
+		// check if you have an action
+		if ap.theinceptionExecutor == nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
+			return
+		}
+		if ap.theinceptionExecutor.started == false {
+			return
+		}
+		if ap.theinceptionExecutor.started == true {
+			Debug("received a offload signal, now stopping inception")
+			ap.theinceptionExecutor.Stop()
+		}
+	} else if strings.Contains(actionName, "ptest07") {
+		// check if you have an action
+		if ap.thegooglenetExecutor == nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
+			return
+		}
+		if ap.thegooglenetExecutor.started == false {
+			return
+		}
+		if ap.thegooglenetExecutor.started == true {
+			Debug("received a offload signal, now stopping googlenet")
+			ap.thegooglenetExecutor.Stop()
+		}
+	} else if strings.Contains(actionName, "ptest08") {
+		// check if you have an action
+		if ap.thebertExecutor == nil {
+			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
+			return
+		}
+		if ap.thebertExecutor.started == false {
+			return
+		}
+		if ap.thebertExecutor.started == true {
+			Debug("received a offload signal, now stopping bert")
+			ap.thebertExecutor.Stop()
+		}
 	} else {
 		sendError(w, http.StatusBadRequest, fmt.Sprintf("Not defined this model!"))
 		return

@@ -60,9 +60,6 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
-		//ap.theresnet18Executor = NEWresnet18Executor1
-
 		//Pre-load libraries & model
 		err := ap.theresnet18Executor.Start(false)
 
@@ -131,8 +128,129 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited"))
 			return
 		}
+	} else if strings.Contains(actionName, "ptest01") {
+		Debug("LoadHandler starts pre-loading alex.")
+		// check if you have an action
+		if ap.thealexExecutor == nil || ap.thealexExecutor.cmd == nil {
+			Debug("Just create a new alexexecutor")
+			NEWalexExecutor1 := NewalexExecutor(ap.outFile, ap.errFile, "_test/loadalex.sh", ap.env)
+			ap.thealexExecutor = NEWalexExecutor1
+		}
+		if ap.thealexExecutor.started {
+			Debug("already loaded alex")
+			return
+		}
+
+		//Pre-load libraries & model
+		err := ap.thealexExecutor.Start(false)
+
+		Debug("Handler Finished pre-loading alex.")
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited (loadHandler)")
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
+			Debug(err.Error())
+			return
+		}
+	} else if strings.Contains(actionName, "ptest02") {
+		Debug("LoadHandler starts pre-loading vgg.")
+		// check if you have an action
+		if ap.thevggExecutor == nil || ap.thevggExecutor.cmd == nil {
+			Debug("Just create a new vggexecutor")
+			NEWvggExecutor1 := NewvggExecutor(ap.outFile, ap.errFile, "_test/loadvgg.sh", ap.env)
+			ap.thevggExecutor = NEWvggExecutor1
+		}
+		if ap.thevggExecutor.started {
+			Debug("already loaded vgg")
+			return
+		}
+
+		//Pre-load libraries & model
+		err := ap.thevggExecutor.Start(false)
+
+		Debug("Handler Finished pre-loading vgg.")
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited (loadHandler)")
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
+			Debug(err.Error())
+			return
+		}
+	} else if strings.Contains(actionName, "ptest03") {
+		Debug("LoadHandler starts pre-loading inception.")
+		// check if you have an action
+		if ap.theinceptionExecutor == nil || ap.theinceptionExecutor.cmd == nil {
+			Debug("Just create a new inceptionexecutor")
+			NEWinceptionExecutor1 := NewinceptionExecutor(ap.outFile, ap.errFile, "_test/loadinception.sh", ap.env)
+			ap.theinceptionExecutor = NEWinceptionExecutor1
+		}
+		if ap.theinceptionExecutor.started {
+			Debug("already loaded inception")
+			return
+		}
+
+		//Pre-load libraries & model
+		err := ap.theinceptionExecutor.Start(false)
+
+		Debug("Handler Finished pre-loading inception.")
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited (loadHandler)")
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
+			Debug(err.Error())
+			return
+		}
+	} else if strings.Contains(actionName, "ptest07") {
+		Debug("LoadHandler starts pre-loading googlenet.")
+		// check if you have an action
+		if ap.thegooglenetExecutor == nil || ap.thegooglenetExecutor.cmd == nil {
+			Debug("Just create a new googlenetexecutor")
+			NEWgooglenetExecutor1 := NewgooglenetExecutor(ap.outFile, ap.errFile, "_test/loadgooglenet.sh", ap.env)
+			ap.thegooglenetExecutor = NEWgooglenetExecutor1
+		}
+		if ap.thegooglenetExecutor.started {
+			Debug("already loaded googlenet")
+			return
+		}
+
+		//Pre-load libraries & model
+		err := ap.thegooglenetExecutor.Start(false)
+
+		Debug("Handler Finished pre-loading googlenet.")
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited (loadHandler)")
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
+			Debug(err.Error())
+			return
+		}
+	} else if strings.Contains(actionName, "ptest08") {
+		Debug("LoadHandler starts pre-loading bert.")
+		// check if you have an action
+		if ap.thebertExecutor == nil || ap.thebertExecutor.cmd == nil {
+			Debug("Just create a new bertexecutor")
+			NEWbertExecutor1 := NewbertExecutor(ap.outFile, ap.errFile, "_test/loadbert.sh", ap.env)
+			ap.thebertExecutor = NEWbertExecutor1
+		}
+		if ap.thebertExecutor.started {
+			Debug("already loaded bert")
+			return
+		}
+
+		//Pre-load libraries & model
+		err := ap.thebertExecutor.Start(false)
+
+		Debug("Handler Finished pre-loading bert.")
+		// check for early termination
+		if err != nil {
+			Debug("WARNING! Command exited (loadHandler)")
+			sendError(w, http.StatusBadRequest, fmt.Sprintf("command exited！！"))
+			Debug(err.Error())
+			return
+		}
 	} else {
 		sendError(w, http.StatusBadRequest, fmt.Sprintf("Not defined this model!"))
 		return
 	}
+
 }
