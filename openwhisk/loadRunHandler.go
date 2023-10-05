@@ -265,7 +265,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
 			return
 		}
-	} else if strings.Contains(actionName, "ptest06") {
+	} else if strings.Contains(actionName, "ptest01") {
 		// actionName contains "ptest"
 		Debug("LoadRunHandler done reading %d bytes", len(body))
 
@@ -332,7 +332,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
 			return
 		}
-	} else if strings.Contains(actionName, "ptest06") {
+	} else if strings.Contains(actionName, "ptest02") {
 		// actionName contains "ptest"
 		Debug("LoadRunHandler done reading %d bytes", len(body))
 
@@ -399,7 +399,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
 			return
 		}
-	} else if strings.Contains(actionName, "ptest06") {
+	} else if strings.Contains(actionName, "ptest03") {
 		// actionName contains "ptest"
 		Debug("LoadRunHandler done reading %d bytes", len(body))
 
@@ -466,7 +466,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
 			return
 		}
-	} else if strings.Contains(actionName, "ptest06") {
+	} else if strings.Contains(actionName, "ptest07") {
 		// actionName contains "ptest"
 		Debug("LoadRunHandler done reading %d bytes", len(body))
 
@@ -533,7 +533,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("Only wrote %d of %d bytes to response", numBytesWritten, len(response)))
 			return
 		}
-	} else if strings.Contains(actionName, "ptest06") {
+	} else if strings.Contains(actionName, "ptest08") {
 		// actionName contains "ptest"
 		Debug("LoadRunHandler done reading %d bytes", len(body))
 

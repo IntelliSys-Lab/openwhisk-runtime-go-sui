@@ -338,33 +338,41 @@ func (ap *ActionProxy) StopAllExecutorsExcept(name string) {
 	if name != "alex" && ap.thealexExecutor != nil && ap.thealexExecutor.started {
 		ap.thealexExecutor.Stop()
 		ap.thealexExecutor = nil
+		Debug("ap stopped alex")
 	}
 	if name != "vgg" && ap.thevggExecutor != nil && ap.thevggExecutor.started {
 		ap.thevggExecutor.Stop()
 		ap.thevggExecutor = nil
+		Debug("ap stopped vgg")
 	}
 	if name != "inception" && ap.theinceptionExecutor != nil && ap.theinceptionExecutor.started {
 		ap.theinceptionExecutor.Stop()
 		ap.theinceptionExecutor = nil
+		Debug("ap stopped inception")
 	}
 	if name != "resnet18" && ap.theresnet18Executor != nil && ap.theresnet18Executor.started {
 		ap.theresnet18Executor.Stop()
 		ap.theresnet18Executor = nil
+		Debug("ap stopped resnet18")
 	}
 	if name != "resnet50" && ap.theresnet50Executor != nil && ap.theresnet50Executor.started {
 		ap.theresnet50Executor.Stop()
 		ap.theresnet50Executor = nil
+		Debug("ap stopped resnet50")
 	}
 	if name != "resnet152" && ap.theresnet152Executor != nil && ap.theresnet152Executor.started {
 		ap.theresnet152Executor.Stop()
 		ap.theresnet152Executor = nil
+		Debug("ap stopped resnet152")
 	}
 	if name != "googlenet" && ap.thegooglenetExecutor != nil && ap.thegooglenetExecutor.started {
 		ap.thegooglenetExecutor.Stop()
 		ap.thegooglenetExecutor = nil
+		Debug("ap stopped googlenet")
 	}
 	if name != "bert" && ap.thebertExecutor != nil && ap.thebertExecutor.started {
 		ap.thebertExecutor.Stop()
 		ap.thebertExecutor = nil
+		Debug("ap stopped bert")
 	}
 }
