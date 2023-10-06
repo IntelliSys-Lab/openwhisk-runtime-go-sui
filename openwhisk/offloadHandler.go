@@ -94,6 +94,7 @@ func (ap *ActionProxy) offloadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if ap.thealexExecutor.started == false {
+			Debug("received a offload signal, alex has not started")
 			return
 		}
 		if ap.thealexExecutor.started == true {
