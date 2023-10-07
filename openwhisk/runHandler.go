@@ -77,6 +77,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		//NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
 		//ap.theresnet18Executor = NEWresnet18Executor1
 		Debug("has created res18executor")
+		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginresnet18Executor.StartAndWaitForOutput()
 
 		//重建新的executor
@@ -87,6 +88,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		//NEWresnet50Executor1 := Newresnet50Executor(ap.outFile, ap.errFile, "_test/loadres50.sh", ap.env)
 		//ap.theresnet50Executor = NEWresnet50Executor1
 		Debug("has created res50executor")
+		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginresnet50Executor.StartAndWaitForOutput()
 
 		//重建新的executor
@@ -97,6 +99,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		//NEWresnet152Executor1 := Newresnet152Executor(ap.outFile, ap.errFile, "_test/loadres152.sh", ap.env)
 		//ap.theresnet152Executor = NEWresnet152Executor1
 		Debug("has created res152executor")
+		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginresnet152Executor.StartAndWaitForOutput()
 
 		//重建新的executor
@@ -105,30 +108,35 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 
 	} else if strings.Contains(actionName, "ptest01") && (ap.thealexExecutor.started == false) {
 		Debug("has created alexexecutor")
+		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginalexExecutor.StartAndWaitForOutput()
 		//重建新的executor
 		NEWOriginalexExecutor := NewOriginalexExecutor(ap.outFile, ap.errFile, "_test/funcalex.sh", ap.env)
 		ap.theOriginalexExecutor = NEWOriginalexExecutor
 	} else if strings.Contains(actionName, "ptest02") && (ap.thevggExecutor.started == false) {
 		Debug("has created vggexecutor")
+		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginvggExecutor.StartAndWaitForOutput()
 		//重建新的executor
 		NEWOriginvggExecutor := NewOriginvggExecutor(ap.outFile, ap.errFile, "_test/funcvgg.sh", ap.env)
 		ap.theOriginvggExecutor = NEWOriginvggExecutor
 	} else if strings.Contains(actionName, "ptest03") && (ap.theinceptionExecutor.started == false) {
 		Debug("has created inceptionexecutor")
+		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOrigininceptionExecutor.StartAndWaitForOutput()
 		//重建新的executor
 		NEWOrigininceptionExecutor := NewOrigininceptionExecutor(ap.outFile, ap.errFile, "_test/funcinception.sh", ap.env)
 		ap.theOrigininceptionExecutor = NEWOrigininceptionExecutor
 	} else if strings.Contains(actionName, "ptest07") && (ap.thegooglenetExecutor.started == false) {
 		Debug("has created googlenetexecutor")
+		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOrigingooglenetExecutor.StartAndWaitForOutput()
 		//重建新的executor
 		NEWOrigingooglenetExecutor := NewOrigingooglenetExecutor(ap.outFile, ap.errFile, "_test/funcgooglenet.sh", ap.env)
 		ap.theOrigingooglenetExecutor = NEWOrigingooglenetExecutor
 	} else if strings.Contains(actionName, "ptest08") && (ap.thebertExecutor.started == false) {
 		Debug("has created bertexecutor")
+		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginbertExecutor.StartAndWaitForOutput()
 		//重建新的executor
 		NEWOriginbertExecutor := NewOriginbertExecutor(ap.outFile, ap.errFile, "_test/funcbert.sh", ap.env)
