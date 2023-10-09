@@ -94,6 +94,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! RES18 Command exited！！")
+			Debug(err.Error())
 			ap.theresnet18Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet18 command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -230,6 +231,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited?")
+			Debug(err.Error())
 			ap.theresnet152Executor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("resnet152 command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -297,6 +299,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited?")
+			Debug(err.Error())
 			ap.thealexExecutor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("alex command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -364,6 +367,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited?")
+			Debug(err.Error())
 			ap.thevggExecutor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("vgg command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -431,6 +435,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited?")
+			Debug(err.Error())
 			ap.theinceptionExecutor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("inception command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -498,6 +503,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited?")
+			Debug(err.Error())
 			ap.thegooglenetExecutor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("googlenet command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
@@ -565,6 +571,7 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 		// check for early termination
 		if err != nil {
 			Debug("WARNING! Command exited?")
+			Debug(err.Error())
 			ap.thebertExecutor = nil
 			sendError(w, http.StatusBadRequest, fmt.Sprintf("bert command exited"))
 			sendError(w, http.StatusBadRequest, fmt.Sprintf(err.Error()))
