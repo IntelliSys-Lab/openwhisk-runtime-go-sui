@@ -177,6 +177,7 @@ func (proc *OriginbertExecutor) Interact(in []byte) ([]byte, error) {
 
 func (proc *OriginbertExecutor) StartAndWaitForOutput() ([]byte, error) {
 	Debug("Start Loading bert:")
+	proc.started = true
 	// start the underlying executable
 	Debug("Start:")
 	err1 := proc.cmd.Start() //调用 *Cmd 的 Start 方法，开始执行命令

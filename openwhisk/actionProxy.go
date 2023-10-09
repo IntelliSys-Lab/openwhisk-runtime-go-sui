@@ -279,7 +279,9 @@ func (ap *ActionProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ap.initHandler(w, r)
 	case "/load":
 		Debug("Proxy Receive a load Signal")
-		ap.loadHandler(w, r)
+		if ap.HasAnyExecutorStarted() {
+			ap.loadHandler(w, r)
+		}
 	case "/offload":
 		Debug("Proxy Receive an offload Signal")
 		ap.offloadHandler(w, r)
@@ -375,4 +377,33 @@ func (ap *ActionProxy) StopAllExecutorsExcept(name string) {
 		ap.thebertExecutor = nil
 		Debug("ap stopped bert")
 	}
+}
+
+//在load前，检查proxy中是否正在执行OriginExecutor（non-loaded function)
+func (ap *ActionProxy) HasAnyExecutorStarted() bool {
+	if ap.theOriginalexExecutor != nil && ap.theOriginalexExecutor.started {
+		return true
+	}
+	if ap.theOriginvggExecutor != nil && ap.theOriginvggExecutor.started {
+		return true
+	}
+	if ap.theOrigininceptionExecutor != nil && ap.theOrigininceptionExecutor.started {
+		return true
+	}
+	if ap.theOriginresnet18Executor != nil && ap.theOriginresnet18Executor.started {
+		return true
+	}
+	if ap.theOriginresnet50Executor != nil && ap.theOriginresnet50Executor.started {
+		return true
+	}
+	if ap.theOriginresnet152Executor != nil && ap.theOriginresnet152Executor.started {
+		return true
+	}
+	if ap.theOrigingooglenetExecutor != nil && ap.theOrigingooglenetExecutor.started {
+		return true
+	}
+	if ap.theOriginbertExecutor != nil && ap.theOriginbertExecutor.started {
+		return true
+	}
+	return false
 }
