@@ -279,7 +279,7 @@ func (ap *ActionProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ap.initHandler(w, r)
 	case "/load":
 		Debug("Proxy Receive a load Signal")
-		if ap.HasAnyExecutorStarted() {
+		if !ap.HasAnyExecutorStarted() {
 			ap.loadHandler(w, r)
 		}
 	case "/offload":
