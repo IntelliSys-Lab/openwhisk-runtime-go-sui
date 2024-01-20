@@ -55,6 +55,7 @@ func (ap *ActionProxy) loadHandler(w http.ResponseWriter, r *http.Request) {
 			NEWresnet18Executor1 := Newresnet18Executor(ap.outFile, ap.errFile, "_test/loadres18.sh", ap.env)
 			ap.theresnet18Executor = NEWresnet18Executor1
 		}
+
 		if ap.theresnet18Executor.started {
 			Debug("already loaded resnet18")
 			return

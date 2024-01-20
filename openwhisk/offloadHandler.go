@@ -93,6 +93,7 @@ func (ap *ActionProxy) offloadHandler(w http.ResponseWriter, r *http.Request) {
 			sendError(w, http.StatusInternalServerError, fmt.Sprintf("no action defined yet"))
 			return
 		}
+
 		if ap.thealexExecutor.started == false {
 			Debug("received a offload signal, alex has not started")
 			return
