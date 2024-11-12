@@ -18,12 +18,11 @@
 # build go proxy from source
 FROM golang:1.15 AS builder_source
 
-ARG GO_PROXY_GITHUB_TOKEN=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
-ARG GO_PROXY_GITHUB_USER=IntelliSys-Lab
+
 ARG GO_PROXY_GITHUB_BRANCH=master
 
 RUN git clone --branch ${GO_PROXY_GITHUB_BRANCH} \
-   https://${GO_PROXY_GITHUB_TOKEN}@github.com/${GO_PROXY_GITHUB_USER}/openwhisk-runtime-go-sui /src ;\
+   https:github.com/InstaInfer/openwhisk-runtime-go-sui /src ;\
    cd /src ; env GO111MODULE=on CGO_ENABLED=0 go build main/proxy.go && \
    mv proxy /bin/proxy
 
