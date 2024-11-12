@@ -27,10 +27,6 @@ import (
 
 func (ap *ActionProxy) offloadHandler(w http.ResponseWriter, r *http.Request) {
 
-	//在最开始，先得到r.Body.ActionName，然后分析：是否有对应的modelExecutor（通过IsStarted参数）。
-	//if IsStarted == false：证明是冷启动，直接调用runHandler(w,r）
-	//else：证明已经有pre-load的容器了，继续往下执行。
-
 	// parse the request
 	body, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
