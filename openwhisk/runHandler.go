@@ -48,8 +48,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 
 	// parse the request
 	body, err1 := ioutil.ReadAll(r.Body)
-	//当使用body, err := ioutil.ReadAll(r.Body)读取r.Body后，会将r.Body的读取位置移动到数据末尾。如果此时在runHandler()函数中再次尝试读取r.Body，将无法获取到任何数据。
-	//因此，重置r.Body: Reset r.Body so it can be read again
+
 	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 	defer r.Body.Close()
 	if err1 != nil {
@@ -63,8 +62,9 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 	var response []byte
 	var err error
 
-	//proxy本来的设计，是只能给一个action用的。为了支持多个action，我们在执行完inference的action后，刷新executor，重新执行下一次任务。
-	//get the action Name
+	//The original design of the proxy was intended for use with a single action.
+	//To support multiple actions, we refresh the executor after completing
+	//the inference action and then execute the next task.
 	var req requestBody
 	err = json.Unmarshal(body, &req)
 	if err != nil {
@@ -80,7 +80,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginresnet18Executor.StartAndWaitForOutput()
 
-		//重建新的executor
+		//create new executor
 		NEWOriginresnet18Executor := NewOriginresnet18Executor(ap.outFile, ap.errFile, "_test/func18.sh", ap.env)
 		ap.theOriginresnet18Executor = NEWOriginresnet18Executor
 
@@ -91,7 +91,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginresnet50Executor.StartAndWaitForOutput()
 
-		//重建新的executor
+		//create new executor
 		NEWOriginresnet50Executor := NewOriginresnet50Executor(ap.outFile, ap.errFile, "_test/func50.sh", ap.env)
 		ap.theOriginresnet50Executor = NEWOriginresnet50Executor
 
@@ -102,7 +102,7 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginresnet152Executor.StartAndWaitForOutput()
 
-		//重建新的executor
+		//create new executor
 		NEWOriginresnet152Executor := NewOriginresnet152Executor(ap.outFile, ap.errFile, "_test/func152.sh", ap.env)
 		ap.theOriginresnet152Executor = NEWOriginresnet152Executor
 
@@ -110,35 +110,35 @@ func (ap *ActionProxy) runHandler(w http.ResponseWriter, r *http.Request) {
 		Debug("has created alexexecutor")
 		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginalexExecutor.StartAndWaitForOutput()
-		//重建新的executor
+		//create new executor
 		NEWOriginalexExecutor := NewOriginalexExecutor(ap.outFile, ap.errFile, "_test/funcalex.sh", ap.env)
 		ap.theOriginalexExecutor = NEWOriginalexExecutor
 	} else if strings.Contains(actionName, "ptest02") && (ap.thevggExecutor.started == false) {
 		Debug("has created vggexecutor")
 		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginvggExecutor.StartAndWaitForOutput()
-		//重建新的executor
+		//create new executor
 		NEWOriginvggExecutor := NewOriginvggExecutor(ap.outFile, ap.errFile, "_test/funcvgg.sh", ap.env)
 		ap.theOriginvggExecutor = NEWOriginvggExecutor
 	} else if strings.Contains(actionName, "ptest03") && (ap.theinceptionExecutor.started == false) {
 		Debug("has created inceptionexecutor")
 		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOrigininceptionExecutor.StartAndWaitForOutput()
-		//重建新的executor
+		//create new executor
 		NEWOrigininceptionExecutor := NewOrigininceptionExecutor(ap.outFile, ap.errFile, "_test/funcinception.sh", ap.env)
 		ap.theOrigininceptionExecutor = NEWOrigininceptionExecutor
 	} else if strings.Contains(actionName, "ptest07") && (ap.thegooglenetExecutor.started == false) {
 		Debug("has created googlenetexecutor")
 		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOrigingooglenetExecutor.StartAndWaitForOutput()
-		//重建新的executor
+		//create new executor
 		NEWOrigingooglenetExecutor := NewOrigingooglenetExecutor(ap.outFile, ap.errFile, "_test/funcgooglenet.sh", ap.env)
 		ap.theOrigingooglenetExecutor = NEWOrigingooglenetExecutor
 	} else if strings.Contains(actionName, "ptest08") && (ap.thebertExecutor.started == false) {
 		Debug("has created bertexecutor")
 		ap.StopAllExecutorsExcept("none")
 		response, err = ap.theOriginbertExecutor.StartAndWaitForOutput()
-		//重建新的executor
+		//create new executor
 		NEWOriginbertExecutor := NewOriginbertExecutor(ap.outFile, ap.errFile, "_test/funcbert.sh", ap.env)
 		ap.theOriginbertExecutor = NEWOriginbertExecutor
 	} else {
