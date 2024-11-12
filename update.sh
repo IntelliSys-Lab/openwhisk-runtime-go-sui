@@ -1,6 +1,6 @@
 git init               
 git add .
-git commit -m "second commit"
+git commit -m "InstaInfer SoCC24"
 git branch -M main
 git remote add origin git@github.com:IntelliSys-Lab/openwhisk-runtime-go-sui.git
 
