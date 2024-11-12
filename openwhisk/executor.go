@@ -84,30 +84,30 @@ func NewExecutor(logout *os.File, logerr *os.File, command string, env map[strin
 // Interact interacts with the underlying process
 func (proc *Executor) Interact(in []byte) ([]byte, error) {
 	// input to the subprocess
-	proc.input.Write(in)           //将输入的字节切片 in 写入到子进程的输入流中
-	proc.input.Write([]byte("\n")) //向子进程的输入流中写入一个换行符，表示输入结束
+	proc.input.Write(in)
+	proc.input.Write([]byte("\n"))
 
-	chout := make(chan []byte) //创建一个用于接收子进程输出的通道
+	chout := make(chan []byte)
 
 	go func() {
-		out, err := proc.output.ReadBytes('\n') //启动一个并发的 goroutine，它尝试从子进程的输出流中读取数据，直到遇到换行符
+		out, err := proc.output.ReadBytes('\n')
 		if err == nil {
-			chout <- out //如果读取成功，将读取的数据发送到 chout 通道
+			chout <- out
 		} else {
-			chout <- []byte{} //否则,发送一个空的字节切片
+			chout <- []byte{}
 		}
 	}()
 	var err error
 	var out []byte
-	select { //等待从 chout 通道接收数据或者 proc.exited 通道接收数据，表示子进程已经退出
+	select {
 	case out = <-chout:
-		if len(out) == 0 { //如果从 chout 通道接收到的数据长度为 0，表示子进程没有返回任何数据
+		if len(out) == 0 {
 			err = errors.New("no answer from the action")
 		}
-	case <-proc.exited: //如果子进程已经退出
+	case <-proc.exited:
 		err = errors.New("command exited")
 	}
-	proc.cmd.Stdout.Write([]byte(OutputGuard)) //在子进程的标准输出和标准错误流中写入结束标记。
+	proc.cmd.Stdout.Write([]byte(OutputGuard))
 	proc.cmd.Stderr.Write([]byte(OutputGuard))
 	return out, err
 }
@@ -134,21 +134,21 @@ type ActionAck struct {
 func (proc *Executor) Start(waitForAck bool) error {
 	// start the underlying executable
 	Debug("Start:")
-	err := proc.cmd.Start() //调用 *Cmd 的 Start 方法，开始执行命令
-	if err != nil {         //如果有错误，输出错误信息并返回一个 "command exited" 的错误
+	err := proc.cmd.Start()
+	if err != nil {
 		Debug("run: early exit")
 		proc.cmd = nil // no need to kill
 		return fmt.Errorf("command exited")
 	}
-	Debug("pid: %d", proc.cmd.Process.Pid) //如果 Debugging 是 true，则在调试日志中输出命令的进程 ID
+	Debug("pid: %d", proc.cmd.Process.Pid)
 
-	go func() { //启动一个并发的 goroutine，它等待命令的结束，然后向 proc.exited 通道发送 true
+	go func() {
 		proc.cmd.Wait()
 		proc.exited <- true
 	}()
 
 	// not waiting for an ack, so use a timeout
-	if !waitForAck { //如果 waitForAck 是 false，则等待命令的结束或者一个默认的超时时间
+	if !waitForAck {
 		select {
 		case <-proc.exited:
 			return fmt.Errorf("command exited!!!!")
@@ -160,7 +160,7 @@ func (proc *Executor) Start(waitForAck bool) error {
 	// wait for acknowledgement
 	Debug("waiting for an ack")
 	ack := make(chan error)
-	go func() { //启动一个并发的 goroutine，它等待子进程退出，然后向 proc.exited 通道发送 true
+	go func() {
 		out, err := proc.output.ReadBytes('\n')
 		Debug("received ack %s", out)
 		if err != nil {

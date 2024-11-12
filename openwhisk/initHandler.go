@@ -145,9 +145,10 @@ func (ap *ActionProxy) initHandler(w http.ResponseWriter, r *http.Request) {
 	sendOK(w)
 }
 
-// ExtractAndCompile decode the buffer and if a compiler is defined, compile it also
-//ExtractAndCompile 进行了解压和编译两个操作，首先解压输入的字节切片，然后根据情况决定是否需要进行编译。
-//如果不需要编译，直接将文件移动到 bin 目录下；如果需要编译，那么将文件编译后再放到 bin 目录下。
+// ExtractAndCompile performs both extraction and compilation operations. First, it decompresses the input byte slice,
+//then decides whether to compile based on the situation.
+// If no compilation is needed, it directly moves the file to the bin directory;
+//if compilation is required, it compiles the file before placing it in the bin directory.
 func (ap *ActionProxy) ExtractAndCompile(buf *[]byte, main string) (string, error) {
 
 	// extract action in src folder
@@ -160,8 +161,8 @@ func (ap *ActionProxy) ExtractAndCompile(buf *[]byte, main string) (string, erro
 	}
 
 	// some path surgery
-	//首先获取文件 file 的目录路径 dir，然后获取 dir 的父目录 parent
-	//然后构造出 src 目录路径 srcDir、bin 目录路径 binDir，以及在 bin 目录下的 exec 文件路径 binFile
+	// First, retrieve the directory path 'dir' of the file 'file', then obtain the parent directory 'parent' of 'dir'.
+	// Then construct the source directory path 'srcDir', binary directory path 'binDir', and the executable file path 'binFile' in the bin directory.
 	dir := filepath.Dir(file)
 	parent := filepath.Dir(dir)
 	srcDir := filepath.Join(parent, "src")
@@ -177,7 +178,7 @@ func (ap *ActionProxy) ExtractAndCompile(buf *[]byte, main string) (string, erro
 	// ok let's try to compile
 	Debug("compiling: %s main: %s", file, main)
 	os.Mkdir(binDir, 0755)
-	err = ap.CompileAction(main, srcDir, binDir) //调用 CompileAction 方法对 main 进行编译，源码目录是 srcDir，编译输出目录是 binDir
+	err = ap.CompileAction(main, srcDir, binDir)
 	if err != nil {
 		return "", err
 	}

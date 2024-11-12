@@ -37,15 +37,9 @@ type Data struct {
 
 func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 
-	//在最开始，先得到r.Body.ActionName，然后分析：是否有对应的modelExecutor（通过IsStarted参数）。
-	//if IsStarted == false：证明是冷启动，直接调用runHandler(w,r）
-	//else：证明已经有pre-load的容器了，继续往下执行。
-
 	// parse the request
 	body, err := ioutil.ReadAll(r.Body)
 
-	//当使用body, err := ioutil.ReadAll(r.Body)读取r.Body后，会将r.Body的读取位置移动到数据末尾。如果此时在runHandler()函数中再次尝试读取r.Body，将无法获取到任何数据。
-	//因此，重置r.Body: Reset r.Body so it can be read again
 	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 
 	defer r.Body.Close()
@@ -81,7 +75,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
 		ap.StopAllExecutorsExcept("resnet18")
 
 		// remove newlines
@@ -148,7 +141,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
 		ap.StopAllExecutorsExcept("resnet50")
 
 		Debug("Served By LoadRunHandler50")
@@ -217,7 +209,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
 		ap.StopAllExecutorsExcept("resnet152")
 
 		Debug("Served By LoadRunHandler152")
@@ -285,7 +276,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
 		ap.StopAllExecutorsExcept("alex")
 
 		Debug("Served By LoadRunHandlerXX")
@@ -353,7 +343,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
 		ap.StopAllExecutorsExcept("vgg")
 
 		Debug("Served By LoadRunHandlerXX")
@@ -421,7 +410,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
 		ap.StopAllExecutorsExcept("inception")
 
 		Debug("Served By LoadRunHandlerXX")
@@ -489,7 +477,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
 		ap.StopAllExecutorsExcept("googlenet")
 
 		Debug("Served By LoadRunHandlerXX")
@@ -557,7 +544,6 @@ func (ap *ActionProxy) loadRunHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//停止其他model的进程
 		ap.StopAllExecutorsExcept("bert")
 
 		Debug("Served By LoadRunHandlerXX")
