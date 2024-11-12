@@ -177,7 +177,7 @@ func (ap *ActionProxy) StartLatestAction() error {
 		}
 	}
 
-	//为每个model的function都创建一个executor：
+	//Create executor for each inference function：
 	NEWalexExecutor := NewalexExecutor(ap.outFile, ap.errFile, "_test/loadalex.sh", ap.env)
 	NEWvggExecutor := NewvggExecutor(ap.outFile, ap.errFile, "_test/loadvgg.sh", ap.env)
 	NEWinceptionExecutor := NewinceptionExecutor(ap.outFile, ap.errFile, "_test/loadinception.sh", ap.env)
